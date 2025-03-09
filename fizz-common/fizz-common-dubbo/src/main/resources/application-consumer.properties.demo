@@ -1,0 +1,8 @@
+# Dubbo应用配置
+dubbo.application.name=dubbo-demo-consumer
+
+# Dubbo注册中心配置（Nacos）
+dubbo.registry.address=nacos://127.0.0.1:8848
+
+# Spring Boot应用配置
+spring.application.name=dubbo-demo-consumer

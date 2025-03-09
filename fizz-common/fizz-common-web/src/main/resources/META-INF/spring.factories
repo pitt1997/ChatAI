@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.lijs.fizz.common.web.config.i18n.BaseI18nWebConfig

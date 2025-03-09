@@ -1,0 +1,12 @@
+# Dubbo应用配置
+dubbo.application.name=dubbo-demo-provider
+
+# Dubbo注册中心配置（Nacos）
+dubbo.registry.address=nacos://127.0.0.1:8848
+
+# Dubbo协议配置
+dubbo.protocol.name=dubbo
+dubbo.protocol.port=20880
+
+# Spring Boot应用配置
+spring.application.name=dubbo-demo-provider

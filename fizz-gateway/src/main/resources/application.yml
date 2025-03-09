@@ -1,0 +1,58 @@
+server:
+  port: 8099
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    gateway:
+      routes:
+        - id: fizz-admin
+          uri: lb://fizz-admin
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter # 限流配置
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 100
+                redis-rate-limiter.burstCapacity: 200
+        - id: fizz-auth
+          uri: lb://fizz-auth
+          predicates:
+            - Path=/auth/**
+        - id: fizz-api
+          uri: lb://fizz-gateway
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /${path}/${path}/v3/api-docs
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        # server-addr: localhost:8848
+        server-addr: 127.0.0.1:8848
+#        server-addr: ${NACOS_HOST:fizz-register}:${NACOS_PORT:8848}
+        watch:
+          enabled: true
+        watch-delay: 1000
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1 # 默认使用 0 库
+    password: 123456
+  config:
+    import:
+      - optional:nacos:application-@profiles.active@.yml
+      - optional:nacos:${spring.application.name}-@profiles.active@.yml
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO

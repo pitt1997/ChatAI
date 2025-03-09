@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijs.fizz.role.dao.RoleDAO">
+
+    <resultMap id="BaseResultMap" type="com.lijs.fizz.core.model.entity.permission.RoleDO">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+            <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_id,name,
+        path,status,tenant_id,
+        create_user,update_user,create_time,
+        update_time
+    </sql>
+
+    <!-- RoleVO SQL 片段 -->
+    <sql id="roleListClause">
+        SELECT r.id,
+               r.name,
+               r.parent_id,
+               r.path,
+               r.status,
+               r.tenant_id,
+               r.create_user,
+               r.update_user,
+               r.create_time,
+               r.update_time,
+               r.is_delete
+        FROM t_role r
+        WHERE 1 = 1
+    </sql>
+
+    <select id="getRoleVOById" resultType="com.lijs.fizz.core.model.vo.RoleVO">
+        <include refid="roleListClause"/>
+        AND r.id = #{id}
+    </select>
+    
+    <select id="selectRoleList" resultType="com.lijs.fizz.core.model.vo.RoleVO">
+        <include refid="roleListClause"/>
+        <if test="query.name != null and query.name != ''">
+            AND r.name LIKE #{query.name}
+        </if>
+        -- 数据权限
+        ORDER BY r.status, r.update_time DESC
+    </select>
+
+    <select id="getRolePage" resultType="com.lijs.fizz.core.model.vo.RoleVO">
+        <include refid="roleListClause"/>
+        <if test="page.selectIds != null and page.selectIds != ''">
+            AND r.id IN
+            <foreach collection="page.selectIds" open="(" item="id" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="page.name != null and page.name != ''">
+            AND lower(name) LIKE '%'||lower(#{page.name})||'%'
+        </if>
+        <if test="page.status != null and page.status != ''">
+            AND status IN
+            <foreach collection="page.status" open="(" item="status" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+
+        <if test="page.likeQuery != null and page.likeQuery != ''">
+            AND
+            ( lower(name) LIKE '%'||lower(#{page.likeQuery})
+            )
+        </if>
+        ORDER BY r.status, r.update_time DESC
+    </select>
+
+    <update id="logicDeleteById">
+        UPDATE t_role SET is_delete = 1
+        WHERE id = #{id}
+          AND is_delete = 0
+    </update>
+
+    <update id="logicDeleteByIds">
+        UPDATE t_role SET is_delete = 1
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = 0
+    </update>
+
+</mapper>

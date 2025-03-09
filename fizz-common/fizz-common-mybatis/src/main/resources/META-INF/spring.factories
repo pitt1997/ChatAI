@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lijs.fizz.common.mybatis.config.DataSourceConfig,\
+  com.lijs.fizz.common.mybatis.config.MybatisPlusConfig,\
+  com.lijs.fizz.common.mybatis.config.DataPermissionConfig,\
+  com.lijs.fizz.common.mybatis.config.DataSourceRoutingConfig

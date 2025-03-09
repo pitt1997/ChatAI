@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>fizz-backend</artifactId>
+        <groupId>com.lijs.fizz</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fizz-boot</artifactId>
+    <packaging>jar</packaging>
+
+    <description>fizz 单机版启动</description>
+
+    <dependencies>
+        <!-- 认证模块 -->
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-auth</artifactId>
+            <version>${fizz.version}</version>
+        </dependency>
+        <!-- 用户管理模块 -->
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-user</artifactId>
+            <version>${fizz.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-role-permission</artifactId>
+            <version>${fizz.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-resource</artifactId>
+            <version>${fizz.version}</version>
+        </dependency>
+        <!-- 注册中心客户端 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- LB 扩展 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!-- 配置中心客户端 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- 认证中心模块 -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.lijs.fizz</groupId>-->
+        <!--            <artifactId>fizz-auth</artifactId>-->
+        <!--            <version>${fizz.version}</version>-->
+        <!--        </dependency>-->
+    </dependencies>
+
+</project>

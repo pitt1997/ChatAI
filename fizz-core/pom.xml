@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>fizz-backend</artifactId>
+        <groupId>com.lijs.fizz</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>fizz-core</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-common-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-common-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.fizz</groupId>
+            <artifactId>fizz-common-feign</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.plugins.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

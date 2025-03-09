@@ -1,0 +1,7 @@
+canal:
+  client:
+    hostname: 127.0.0.1   # Canal 服务器的主机地址，通常是 Canal 服务器运行的机器的 IP 地址。
+    port: 11111           # Canal 服务器的端口号，默认端口为 11111。
+    destination: example  # Canal 连接的目标实例的名称，通常与 Canal 服务器中的实例名称对应。在 Canal 中，destination 表示 Canal 服务器中的数据源实例名称。
+    username: canal       # Canal 服务器的连接用户名，通常是 canal 用户。该用户有权限读取 Binlog 数据。
+    password: canal       # Canal 服务器的连接密码，与用户名配合使用验证身份。

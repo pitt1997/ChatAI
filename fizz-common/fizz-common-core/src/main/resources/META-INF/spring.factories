@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.lijs.fizz.common.base.config.JacksonConfig,\
+  com.lijs.fizz.common.base.config.RestTemplateConfig

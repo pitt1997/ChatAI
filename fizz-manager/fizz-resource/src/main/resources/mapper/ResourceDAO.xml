@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijs.fizz.resource.dao.ResourceDAO">
+
+    <resultMap id="BaseResultMap" type="com.lijs.fizz.core.model.entity.resource.ResourceDO">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="loginUrl" column="login_url" jdbcType="VARCHAR"/>
+            <result property="logoutUrl" column="logout_url" jdbcType="VARCHAR"/>
+            <result property="logoutType" column="logout_type" jdbcType="TINYINT"/>
+            <result property="protocol" column="protocol" jdbcType="VARCHAR"/>
+            <result property="protocolContent" column="protocol_content" jdbcType="VARCHAR"/>
+            <result property="resourceGroupId" column="resource_group_id" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+            <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+            <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,url,
+        type,login_url,logout_url,
+        logout_type,protocol,protocol_content,
+        resource_group_id,content,description,
+        status,tenant_id,create_user,
+        update_user,create_time,update_time,
+        icon
+    </sql>
+</mapper>
