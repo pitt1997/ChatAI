@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lijs.nex.user.dao.UserDAO">
+
+    <resultMap id="BaseResultMap" type="com.lijs.nex.core.model.entity.idm.UserDO">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="cnName" column="cn_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="organizationId" column="organization_id" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="BLOB"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="BaseResultUserVO" type="com.lijs.nex.core.model.vo.UserVO">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="cnName" column="cn_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="organizationId" column="organization_id" jdbcType="VARCHAR"/>
+        <result property="organizationName" column="organization_name" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="BLOB"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,name,nickname,
+        cn_name,password,organization_id,
+        mobile,email,gender,
+        description,status,tenant_id,
+        create_user,update_user,create_time,
+        update_time,icon
+    </sql>
+
+    <!-- 数据权限 SQL 片段 -->
+    <sql id="dataPermissionClause">
+        <if test="dataPermission.currentUserId != null and dataPermission.currentUserId != '1'">
+            AND u.organization_id IN
+            <foreach collection="dataPermission.organizationIds" item="orgId" open="(" separator="," close=")">
+                #{orgId}
+            </foreach>
+        </if>
+    </sql>
+
+    <!-- UserVO SQL 片段 -->
+    <sql id="userListClause">
+        SELECT u.id,
+               u.name,
+               u.cn_name,
+               u.password,
+               u.organization_id,
+               o.name as organization_name,
+               u.mobile,
+               u.email,
+               u.gender,
+               u.description,
+               u.icon,
+               u.status,
+               u.tenant_id,
+               u.create_user,
+               u.update_user,
+               u.create_time,
+               u.update_time,
+               u.is_delete
+        FROM t_user u
+                 INNER JOIN t_organization o ON o.id = u.organization_id AND o.is_delete = 0
+        WHERE u.id != '1'
+    </sql>
+
+    <select id="getUserVOById" resultMap="BaseResultUserVO">
+        <include refid="userListClause"/>
+        AND u.id = #{id}
+        <include refid="dataPermissionClause"/>
+    </select>
+
+    <select id="selectUserList" resultMap="BaseResultUserVO">
+        <include refid="userListClause"/>
+        <if test="query.name != null and query.name != ''">
+            AND u.name LIKE #{query.name}
+        </if>
+        <if test="query.organizationId != null and query.organizationId != ''">
+            AND u.organization_id = #{query.organizationId}
+        </if>
+        -- 数据权限
+        <include refid="dataPermissionClause"/>
+        ORDER BY u.status, u.update_time DESC
+    </select>
+
+    <select id="getUserPage" resultMap="BaseResultUserVO">
+        <include refid="userListClause"/>
+        <if test="page.selectIds != null and page.selectIds != ''">
+            AND u.id IN
+            <foreach collection="page.selectIds" open="(" item="id" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="page.name != null and page.name != ''">
+            AND lower(name) LIKE '%'||lower(#{page.name})||'%'
+        </if>
+        <if test="page.cnName != null and page.cnName != ''">
+            AND lower(cn_name) LIKE '%'||lower(#{page.cnName})||'%'
+        </if>
+        <if test="page.nickname != null and page.nickname != ''">
+            AND lower(nickname) LIKE '%'||lower(#{page.nickname})||'%'
+        </if>
+        <if test="page.mobile != null and page.mobile != ''">
+            AND lower(mobile) LIKE '%'||lower(#{page.mobile})||'%'
+        </if>
+        <if test="page.email != null and page.email != ''">
+            AND lower(email) LIKE '%'||lower(#{page.email})||'%'
+        </if>
+        <if test="page.status != null and page.status != ''">
+            AND status IN
+            <foreach collection="page.status" open="(" item="status" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        <if test="page.organizationId != null and page.organizationId != ''">
+            AND ( o.organization_id IN (
+            SELECT t.id FROM
+            (
+            WITH RECURSIVE r AS
+            (
+            SELECT o1.id FROM t_organization o1 WHERE o1.id = #{page.organizationId}
+            UNION ALL
+            SELECT o2.id FROM t_organization o2, r WHERE o2.parent_id = r.id AND o2.is_delete != 1
+            )
+            SELECT DISTINCT r.id FROM r
+            ) t )
+            )
+        </if>
+        <if test="page.likeQuery != null and page.likeQuery != ''">
+            AND
+            ( lower(name) LIKE '%'||lower(#{page.likeQuery})||'%'
+            OR lower(cn_name) LIKE '%'||lower(#{page.likeQuery})||'%'
+            OR lower(email) LIKE '%'||lower(#{page.likeQuery})||'%'
+            OR lower(mobile) LIKE '%'||lower(#{page.likeQuery})||'%'
+            )
+        </if>
+        <include refid="dataPermissionClause"/>
+        ORDER BY u.status, u.update_time DESC
+    </select>
+
+    <select id="getUserVOByName" resultMap="BaseResultUserVO">
+        <include refid="userListClause"/>
+        AND u.name = #{name}
+        <include refid="dataPermissionClause"/>
+    </select>
+
+    <update id="logicDeleteById">
+        UPDATE t_user SET is_delete = 1
+        WHERE id = #{id}
+        AND is_delete = 0
+    </update>
+
+    <update id="logicDeleteByIds">
+        UPDATE t_user SET is_delete = 1
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = 0
+    </update>
+
+</mapper>

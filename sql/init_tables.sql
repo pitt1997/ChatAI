@@ -247,18 +247,18 @@ CREATE TABLE `t_user_register`
 -- SQL init data
 
 -- 初始化根节点
-INSERT INTO `fizz`.`t_organization`(`id`, `code`, `name`, `parent_id`, `path`, `description`, `status`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', NULL, '根组织', NULL, '/', '根组织节点', 1, '1', NULL, '2024-12-20 10:14:06', NULL);
+INSERT INTO `nex`.`t_organization`(`id`, `code`, `name`, `parent_id`, `path`, `description`, `status`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', NULL, '根组织', NULL, '/', '根组织节点', 1, '1', NULL, '2024-12-20 10:14:06', NULL);
 
 -- 初始化管理员用户
-INSERT INTO `fizz`.`t_user`(`id`, `name`, `nickname`, `cn_name`, `icon`, `password`, `organization_id`, `mobile`, `email`, `gender`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', 'admin', NULL, '超级管理员', NULL, '123456', '1', NULL, NULL, NULL, NULL, 0, 0, NULL, '1', NULL, '2024-12-20 11:32:31', NULL);
+INSERT INTO `nex`.`t_user`(`id`, `name`, `nickname`, `cn_name`, `icon`, `password`, `organization_id`, `mobile`, `email`, `gender`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', 'admin', NULL, '超级管理员', NULL, '123456', '1', NULL, NULL, NULL, NULL, 0, 0, NULL, '1', NULL, '2024-12-20 11:32:31', NULL);
 
 -- 初始化用户组
-INSERT INTO `fizz`.`t_user_group`(`id`, `name`, `parent_id`, `path`, `status`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', '用户组', '0', '/', 1, '1', '2024-12-20 13:51:40', NULL, NULL);
+INSERT INTO `nex`.`t_user_group`(`id`, `name`, `parent_id`, `path`, `status`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', '用户组', '0', '/', 1, '1', '2024-12-20 13:51:40', NULL, NULL);
 
 -- 初始化资源组
-INSERT INTO `fizz`.`t_resource_group`(`id`, `name`, `parent_id`, `path`, `status`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', '资源组', '0', '/', 1, '1', '2024-12-20 13:50:53', NULL, NULL);
+INSERT INTO `nex`.`t_resource_group`(`id`, `name`, `parent_id`, `path`, `status`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', '资源组', '0', '/', 1, '1', '2024-12-20 13:50:53', NULL, NULL);
 
 -- 初始化角色表
-INSERT INTO `fizz`.`t_role`(`id`, `parent_id`, `name`, `path`, `status`, `tenant_id`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', NULL, '超级管理员', '/1', 1, NULL, '1', '2024-12-20 14:10:26', NULL, NULL);
+INSERT INTO `nex`.`t_role`(`id`, `parent_id`, `name`, `path`, `status`, `tenant_id`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', NULL, '超级管理员', '/1', 1, NULL, '1', '2024-12-20 14:10:26', NULL, NULL);
 
-INSERT INTO `fizz`.`t_role_user`(`id`, `role_id`, `user_id`) VALUES ('1', '1', '1');
+INSERT INTO `nex`.`t_role_user`(`id`, `role_id`, `user_id`) VALUES ('1', '1', '1');

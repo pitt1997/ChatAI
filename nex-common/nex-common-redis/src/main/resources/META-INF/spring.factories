@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lijs.nex.common.cache.config.RedissonCachingConfig,\
+  com.lijs.nex.common.cache.config.CaffeineConfig,\
+  com.lijs.nex.common.cache.config.RedissonConfig,\
+  com.lijs.nex.common.cache.service.CaffeineCacheService,\
+  com.lijs.nex.common.cache.service.RedisCacheService,\
+  com.lijs.nex.common.cache.service.CacheService

@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lijs.fizz.common.flyway.config.FlywayConfig,\
-  com.lijs.fizz.common.flyway.service.impl.FlywayServiceImpl

@@ -1,2 +1,0 @@
-FizzLM by https://pitt1997.github.com
-Version: ${fizz.version}

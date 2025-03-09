@@ -1,9 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lijs.fizz.common.cache.config.RedissonCachingConfig,\
-  com.lijs.fizz.common.cache.config.CaffeineConfig,\
-  com.lijs.fizz.common.cache.config.RedissonConfig,\
-  com.lijs.fizz.common.cache.service.CaffeineCacheService,\
-  com.lijs.fizz.common.cache.service.RedisCacheService,\
-  com.lijs.fizz.common.cache.service.CacheService,\
-  com.lijs.fizz.common.web.config.WebMvcConfig,\
-  com.lijs.fizz.common.web.config.ApiPermissionConfig,\
-  com.lijs.fizz.common.web.config.i18n.BaseI18nWebConfig

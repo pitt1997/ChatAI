@@ -1,6 +1,6 @@
 # 前言
 
-FizzLM 是一个提供多个大模型集成、可灵活切换的高效平台。通过统一认证登录，实现大模型服务统一代理，让用户能够轻松接入像 ChatGPT、Qwen、DeepSeek 这样的热门大模型，同时还支持这些模型本地部署集成，满足不同的应用场景和需求。
+NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。通过统一认证登录，实现大模型服务统一代理，让用户能够轻松接入像 ChatGPT、Qwen、DeepSeek 这样的热门大模型，同时还支持这些模型本地部署集成，满足不同的应用场景和需求。
 
 
 # 系统说明
@@ -16,7 +16,7 @@ FizzLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 ### 项目演示
 
-- 项目仓库（GitHub）：[https://github.com/pitt1997/FizzLM](https://github.com/pitt1997/FizzLM)
+- 项目仓库（GitHub）：[https://github.com/pitt1997/NexLM](https://github.com/pitt1997/NexLM)
 - 项目演示地址：等待上线更新
 
 ![登录页面]()
@@ -51,26 +51,26 @@ FizzLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 ### 组织结构
 
 ```
-fizz-backend
-├── fizz-boot -- 单机部署启动模块
-├── fizz-auth -- 认证授权模块
-├── fizz-admin -- 后台管理启动模块
-├── fizz-common -- 系统公共模块
-│		├── fizz-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
-│		├── fizz-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
-│		├── fizz-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
-│		├── fizz-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
-│		├── fizz-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
-│		├── fizz-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
-│		├── fizz-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
-│		├── fizz-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
-├── fizz-core -- 业务核心基础模块，业务公共依赖对象 VO/DTO/DO 等
-├── fizz-gateway -- 网关模块，统一路由，服务发现等
-├── fizz-manager -- 后台管理模块代码
-│		├── fizz-user -- 用户中心
-│		├── fizz-resource -- 资源中心
-│		├── fizz-role-permission -- 角色授权中心
-├── fizz-ui -- 模块
+backend
+├── nex-auth -- 认证授权模块
+├── nex-boot -- 单机部署启动模块
+├── nex-common -- 系统公共模块
+│	├── nexus-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
+│	├── nex-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
+│	├── nex-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
+│	├── nex-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
+│	├── nex-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
+│	├── nex-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
+│	├── nex-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
+│	├── nex-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
+├── nex-core -- 业务核心基础模块，业务公共依赖对象 VO/DTO/DO 等
+├── nex-gateway -- 网关模块，统一路由，服务发现等
+├── nex-manager -- 后台管理模块代码
+│   ├── nex-admin -- 后台管理启动模块
+│	├── nex-user -- 用户中心
+│	├── nex-resource -- 资源中心
+│	├── nex-role-permission -- 角色授权中心
+├── nex-ui -- 模块
 ├── sql -- 数据库 SQL
 ```
 
@@ -141,7 +141,7 @@ fizz-backend
 
 # 许可证
 
-[Apache License 2.0](https://github.com/pitt1997/FizzLM/blob/main/LICENSE)
+[Apache License 2.0](https://github.com/pitt1997/NexLM/blob/main/LICENSE)
 
 Copyright (c) 2025 pitt1997
 

@@ -1,0 +1,66 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      tracking-modes: COOKIE
+      timeout: 60m
+      cookie:
+        httpOnly: false
+        path: /
+        name: JSESSIONID
+    context-path: /web
+spring:
+  profiles:
+    active: dev # 开发环境 生产则去掉
+  application:
+    name: web
+  security:
+    index-path: /index
+  session:
+    timeout: 86400
+    store-type: redis # 默认为 none, 配置为 redis 读写 session; (session.setAttribute时存储)
+    redis:
+      flush-mode: on_save # 可选值：on_save、immediate、none
+      namespace: auth:session # Redis 中存储会话数据的命名前缀
+      cleanup-cron: 0 0/2 * * * ? # 每 2 分钟执行一次过期会话清理任务
+  freemarker: # freemarker 配置，授权码模式页面渲染使用
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+    request-context-attribute: request
+  cloud:
+    nacos: # 单机版本关闭nacos 服务发现和配置管理的能力
+      config:
+        enabled: false # false：表示单机版 true：微服务（默认开启）
+      discovery:
+        enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/nex
+    username: root
+    password: 12345678
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #兼容的配置
+  redis:
+    sentinel: # 哨兵模式（默认不开启）
+      master: #mymaster
+      nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
+    host: 127.0.0.1
+    port: 6379
+    database: 1 # 默认使用 0 库
+    password:
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 标准输出打印sql
+  global-config:
+    db-config:
+      logic-delete-field: is_delete # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+# 平台配置项
+platform:
+  database-type: MySQL # 数据库类型
+  api-permission: # 不登录可访问
+    anons:
+      - /auth/login

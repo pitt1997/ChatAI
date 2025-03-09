@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.lijs.fizz</groupId>
-    <artifactId>fizz-backend</artifactId>
-    <name>fizz-backend</name>
+    <groupId>com.lijs.nex</groupId>
+    <artifactId>backend</artifactId>
+    <name>backend</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <!-- project base -->
-        <fizz.version>1.0.0-SNAPSHOT</fizz.version>
-        <fizz.project.name>fizz-backend</fizz.project.name>
+        <nex.version>1.0.0-SNAPSHOT</nex.version>
+        <nex.project.name>backend</nex.project.name>
 
         <!-- maven -->
         <maven.version>3.8.1</maven.version>
@@ -163,14 +163,13 @@
     </dependencies>
 
     <modules>
-        <module>fizz-boot</module>
-        <module>fizz-admin</module>
-        <module>fizz-auth</module>
-        <module>fizz-common</module>
-        <module>fizz-core</module>
-        <module>fizz-manager</module>
-        <module>fizz-gateway</module>
-        <module>fizz-ui</module>
+        <module>nex-boot</module>
+        <module>nex-auth</module>
+        <module>nex-common</module>
+        <module>nex-core</module>
+        <module>nex-manager</module>
+        <module>nex-gateway</module>
+        <module>nex-ui</module>
     </modules>
 
     <!-- 项目依赖版本管理 -->
@@ -178,8 +177,8 @@
         <dependencies>
             <!-- 依赖公共版本定义 -->
             <dependency>
-                <groupId>com.lijs.fizz</groupId>
-                <artifactId>fizz-common-bom</artifactId>
+                <groupId>com.lijs.nex</groupId>
+                <artifactId>nex-common-bom</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
