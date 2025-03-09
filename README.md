@@ -6,7 +6,7 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 # 系统说明
 
 - 基于 Spring Cloud 、Spring Boot、MyBatis-Plus、MySQL、Redis、Docker、Kafka 等技术栈实现的 LM 大模型统计平台；
-- 采用主流的互联网机构，同时支持微服务架构和单体架构；
+- 采用主流的互联网架构，支持微服务架构和单体架构；
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
 - OAuth2 的 RBAC 企业快速开发平台...（持续开发中...）
 
@@ -19,29 +19,20 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 - 项目仓库（GitHub）：[https://github.com/pitt1997/NexLM](https://github.com/pitt1997/NexLM)
 - 项目演示地址：等待上线更新
 
-![登录页面]()
+![登录页面](/docs/imgs/login.png)
 
 #### 前后端分离版本
-
-
 
 
 #### 后台管理系统
 
 ![后台管理系统]()
 
-
-
-#### 代码展示
-
-![源码结构]()
-
-
 ### 架构图
 
 #### 系统架构图
 
-![系统架构图]()
+![系统架构图](/docs/imgs/arch.png)
 
 
 #### 业务架构图
@@ -70,7 +61,7 @@ backend
 │	├── nex-user -- 用户中心
 │	├── nex-resource -- 资源中心
 │	├── nex-role-permission -- 角色授权中心
-├── nex-ui -- 模块
+├── nex-ui -- 前端模块
 ├── sql -- 数据库 SQL
 ```
 
