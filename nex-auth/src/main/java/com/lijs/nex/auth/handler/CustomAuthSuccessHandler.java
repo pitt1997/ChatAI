@@ -38,13 +38,10 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(0))));
 
-
         // 获取当前应用的 contextPath (动态前缀，如 "/nex-auth")
         String contextPath = request.getContextPath();  // 例如 "/nex-auth"
-        // 失败后重定向到登录页，并附带错误信息
-        response.sendRedirect(contextPath + "/auth/login?error=");
-
-
+        // 登录成功后跳转到首页
+        response.sendRedirect(contextPath + "/auth/chat");
     }
 
 
