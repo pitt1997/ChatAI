@@ -47,7 +47,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 1 # 默认使用 0 库
-    password: 123456
+    password:
   config:
     import:
       - optional:nacos:application-@profiles.active@.yml

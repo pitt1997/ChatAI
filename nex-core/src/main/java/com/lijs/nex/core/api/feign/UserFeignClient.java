@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @description
  */
 // 通过gateway跳转 TODO 后续实现自动发现版本的
-@FeignClient(contextId = "userFeignClient", value = CommonConstants.Service.ADMIN_SERVICE, url = "http://172.16.136.10:8080")
+@FeignClient(contextId = "userFeignClient", value = CommonConstants.Service.ADMIN_SERVICE, url = "http://127.0.0.1:8080")
 //@FeignClient(contextId = "userFeignClient", value = CommonConstants.Service.GATEWAY_SERVICE)
 @ConditionalOnProperty(name = "spring.cloud.nacos.discovery.enabled", havingValue = "true", matchIfMissing = true) // 微服务时加载
 //@ConditionalOnProperty(name = "spring.cloud.nacos.discovery.enabled", havingValue = "false") // 单机版时加载

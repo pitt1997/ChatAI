@@ -1,5 +1,7 @@
 package com.lijs.nex.chat.llm;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +44,17 @@ public class DeepSeekClient {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class);
 
-        return response.getBody();
+        return extractContent(response.getBody());
+    }
+
+    private String extractContent(String responseBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(responseBody);
+            return root.path("choices").get(0).path("message").path("content").asText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error parsing response";
+        }
     }
 }
