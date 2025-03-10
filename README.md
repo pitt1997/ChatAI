@@ -46,21 +46,21 @@ backend
 ├── nex-auth -- 认证授权模块
 ├── nex-boot -- 单机部署启动模块
 ├── nex-common -- 系统公共模块
-│	├── nexus-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
-│	├── nex-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
-│	├── nex-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
-│	├── nex-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
-│	├── nex-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
-│	├── nex-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
-│	├── nex-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
-│	├── nex-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
+│    ├── nexus-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
+│    ├── nex-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
+│    ├── nex-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
+│    ├── nex-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
+│    ├── nex-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
+│    ├── nex-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
+│    ├── nex-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
+│    ├── nex-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
 ├── nex-core -- 业务核心基础模块，业务公共依赖对象 VO/DTO/DO 等
 ├── nex-gateway -- 网关模块，统一路由，服务发现等
 ├── nex-manager -- 后台管理模块代码
-│   ├── nex-admin -- 后台管理启动模块
-│	├── nex-user -- 用户中心
-│	├── nex-resource -- 资源中心
-│	├── nex-role-permission -- 角色授权中心
+│    ├── nex-admin -- 后台管理启动模块
+│    ├── nex-user -- 用户中心
+│    ├── nex-resource -- 资源中心
+│    ├── nex-role-permission -- 角色授权中心
 ├── nex-ui -- 前端模块
 ├── sql -- 数据库 SQL
 ```

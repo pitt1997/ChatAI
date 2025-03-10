@@ -247,10 +247,11 @@ CREATE TABLE `t_user_register`
 -- SQL init data
 
 -- 初始化根节点
-INSERT INTO `nex`.`t_organization`(`id`, `code`, `name`, `parent_id`, `path`, `description`, `status`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', NULL, '根组织', NULL, '/', '根组织节点', 1, '1', NULL, '2024-12-20 10:14:06', NULL);
+INSERT INTO `nex`.`t_organization`(`id`, `code`, `name`, `parent_id`, `path`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', NULL, '根组织', NULL, '/根组织', '根组织节点', 1, 0, NULL, '1', NULL, '2024-12-20 10:14:06', NULL);
 
 -- 初始化管理员用户
-INSERT INTO `nex`.`t_user`(`id`, `name`, `nickname`, `cn_name`, `icon`, `password`, `organization_id`, `mobile`, `email`, `gender`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', 'admin', NULL, '超级管理员', NULL, '123456', '1', NULL, NULL, NULL, NULL, 0, 0, NULL, '1', NULL, '2024-12-20 11:32:31', NULL);
+INSERT INTO `nex`.`t_user`(`id`, `name`, `nickname`, `cn_name`, `icon`, `password`, `organization_id`, `mobile`, `email`, `gender`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('1', 'admin', 'admin', '超级管理员', NULL, '123456', '1', NULL, NULL, NULL, NULL, 0, 0, NULL, '1', NULL, '2024-12-20 11:32:31', NULL);
+INSERT INTO `nex`.`t_user`(`id`, `name`, `nickname`, `cn_name`, `icon`, `password`, `organization_id`, `mobile`, `email`, `gender`, `description`, `status`, `is_delete`, `tenant_id`, `create_user`, `update_user`, `create_time`, `update_time`) VALUES ('2', 'pitt', 'pitt', NULL, NULL, '123456', '1', '15008888888', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, '2025-01-10 11:27:45', '2025-01-10 11:27:45');
 
 -- 初始化用户组
 INSERT INTO `nex`.`t_user_group`(`id`, `name`, `parent_id`, `path`, `status`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1', '用户组', '0', '/', 1, '1', '2024-12-20 13:51:40', NULL, NULL);
