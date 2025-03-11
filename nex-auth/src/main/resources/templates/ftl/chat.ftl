@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>AI 流式聊天</title>
+    <title>AI 流式聊天（WebSocket 双向通信）</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,25 +69,12 @@
             color: black;
             align-self: flex-start;
         }
-        .loader {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #007bff;
-            border-radius: 50%;
-            width: 12px;
-            height: 12px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
+
 <div class="chat-container">
-    <h1>AI 大模型聊天</h1>
+    <h1>AI 双向流式聊天</h1>
     <div class="chat-box" id="chatBox"></div>
     <div class="input-area">
         <input type="text" id="userInput" placeholder="请输入问题...">
@@ -97,63 +84,95 @@
             <option value="local">本地模型</option>
         </select>
         <button onclick="sendMessage()">发送</button>
+        <button id="stopButton" onclick="stopStreaming()" disabled>停止回答</button>
     </div>
 </div>
 
 <script>
+    let ws;
+    let isStreaming = false; // 是否正在接收 AI 回复
+
+    function initWebSocket() {
+        ws = new WebSocket("ws://localhost:8080/web/api/ai/chat/websocket");
+
+        ws.onopen = function() {
+            console.log("WebSocket 连接成功！");
+            document.getElementById("stopButton").disabled = false; // 允许停止
+        };
+
+        ws.onmessage = function(event) {
+            if (!isStreaming) return; // 如果停止了，就不处理新消息
+            appendBotMessage(event.data);
+        };
+
+        ws.onerror = function(error) {
+            console.error("WebSocket 错误: ", error);
+        };
+
+        ws.onclose = function() {
+            console.log("WebSocket 连接关闭");
+            document.getElementById("stopButton").disabled = true; // 禁用停止按钮
+        };
+    }
+
     function sendMessage() {
         let input = document.getElementById("userInput");
         let message = input.value.trim();
         if (message === "") return;
 
         let modelType = document.getElementById("modelType").value;
-        let chatBox = document.getElementById("chatBox");
 
-        // 显示用户消息
+        appendUserMessage(message);
+
+        // 如果 WebSocket 关闭了，重新连接
+        if (!ws || ws.readyState === WebSocket.CLOSED) {
+            initWebSocket();
+            setTimeout(() => ws.send(JSON.stringify({ modelType: modelType, message: message })), 500);
+        } else {
+            ws.send(JSON.stringify({ modelType: modelType, message: message }));
+        }
+
+        isStreaming = true; // 允许接收 AI 回复
+        input.value = "";
+        document.getElementById("stopButton").disabled = false; // 启用“停止”按钮
+    }
+
+    function stopStreaming() {
+        isStreaming = false; // 停止接收数据
+        if (ws) {
+            ws.close(); // 关闭 WebSocket 连接
+        }
+        document.getElementById("stopButton").disabled = true; // 禁用“停止”按钮
+    }
+
+    function appendUserMessage(text) {
+        let chatBox = document.getElementById("chatBox");
         let userMessage = document.createElement("div");
         userMessage.className = "message user-message";
-        userMessage.innerText = message;
+        userMessage.innerText = text;
         chatBox.appendChild(userMessage);
-
-        // 显示 AI "正在输入..." 和加载动画
-        let botMessage = document.createElement("div");
-        botMessage.className = "message bot-message";
-        botMessage.innerHTML = "AI 正在输入... <span class='loader'></span>";
-        chatBox.appendChild(botMessage);
-        input.value = "";
-
-        // 滚动到最新消息
         chatBox.scrollTop = chatBox.scrollHeight;
-
-        // 编码用户输入
-        var encodedMessage = encodeURIComponent(message);
-        console.log("URL Encoded message:", encodedMessage);
-
-        // 通过 SSE 方式获取流式返回的 AI 结果
-        let eventSource = new EventSource("/web/api/ai/chat/stream?modelType=" + modelType + "&prompt=" + encodedMessage);
-        let isFirstChunk = true; // 标记是否是第一条消息
-
-        eventSource.onmessage = function(event) {
-            if (isFirstChunk) {
-                // 如果是第一条消息，替换初始文案
-                botMessage.innerHTML = event.data;
-                isFirstChunk = false;
-            } else {
-                // 否则，追加内容
-                botMessage.innerHTML += event.data;
-            }
-            // 滚动到最新消息
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
-
-        eventSource.onerror = function() {
-            eventSource.close();
-            if (isFirstChunk) {
-                // 如果流式请求出错，且没有收到任何数据，显示错误信息
-                botMessage.innerHTML = "AI 响应失败，请重试。";
-            }
-        };
     }
+
+    function appendBotMessage(text) {
+        let chatBox = document.getElementById("chatBox");
+
+        let lastMessage = chatBox.lastElementChild;
+        if (lastMessage && lastMessage.classList.contains("bot-message")) {
+            lastMessage.innerText += text;
+        } else {
+            let botMessage = document.createElement("div");
+            botMessage.className = "message bot-message";
+            botMessage.innerText = text;
+            chatBox.appendChild(botMessage);
+        }
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // 初始化 WebSocket 连接
+    initWebSocket();
 </script>
+
 </body>
 </html>

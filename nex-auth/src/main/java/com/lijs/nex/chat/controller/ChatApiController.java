@@ -57,7 +57,7 @@ public class ChatApiController {
         SseEmitter emitter = new SseEmitter();
         executor.execute(() -> {
             try {
-                deepSeekClient.streamChat(prompt, emitter);
+                deepSeekClient.streamChatSEE(prompt, emitter);
                 emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);

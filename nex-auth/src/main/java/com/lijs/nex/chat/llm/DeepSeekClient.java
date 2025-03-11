@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +28,9 @@ public class DeepSeekClient {
     private static final String API_URL = "https://api.deepseek.com/chat/completions"; // DeepSeek API 地址
     private static final String API_KEY = "你的 DeepSeek API Key"; // 替换为你的 API Key
     private static final String MODEL = "deepseek-chat"; // deepseek-v3 / deepseek-r1
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public String chat(String prompt) {
         RestTemplate restTemplate = new RestTemplate();
@@ -52,18 +57,56 @@ public class DeepSeekClient {
         return extractContent(response.getBody());
     }
 
-    private String extractContent(String responseBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(responseBody);
-            return root.path("choices").get(0).path("message").path("content").asText();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error parsing response";
-        }
+    /**
+     * 通过 WebSocket 逐步返回 AI 生成的内容
+     */
+    public void streamChatWs(String prompt, WebSocketSession session) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + API_KEY);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("model", MODEL);
+        body.put("temperature", 0.7);
+        body.put("max_tokens", 2048);
+        body.put("stream", true);
+
+        List<Map<String, String>> messages = Arrays.asList(
+                new HashMap<String, String>() {{
+                    put("role", "user");
+                    put("content", prompt);
+                }}
+        );
+        body.put("messages", messages);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+        // 使用 RequestCallback 处理请求
+        RequestCallback requestCallback = clientHttpRequest -> {
+            objectMapper.writeValue(clientHttpRequest.getBody(), body);
+            clientHttpRequest.getHeaders().addAll(headers);
+        };
+
+        // 处理响应流
+        restTemplate.execute(API_URL, HttpMethod.POST, requestCallback, response -> {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("data: ")) {
+                    String json = line.substring(6).trim();
+                    if (!json.equals("[DONE]")) {
+                        String content = extractContentStream(json);
+                        if (!content.isEmpty() && session.isOpen()) {
+                            session.sendMessage(new TextMessage(content)); // 发送给 WebSocket 客户端
+                        }
+                    }
+                }
+            }
+            return null;
+        });
     }
 
-    public void streamChat(String prompt, SseEmitter emitter) throws IOException {
+    public void streamChatSEE(String prompt, SseEmitter emitter) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -127,11 +170,11 @@ public class DeepSeekClient {
         }
     }
 
-    private String extractContentStream1(String json) {
+    private String extractContent(String responseBody) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(json);
-            return root.path("choices").get(0).path("delta").path("content").asText();
+            JsonNode root = objectMapper.readTree(responseBody);
+            return root.path("choices").get(0).path("message").path("content").asText();
         } catch (Exception e) {
             e.printStackTrace();
             return "Error parsing response";
