@@ -69,20 +69,6 @@
             color: black;
             align-self: flex-start;
         }
-        .loader {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #007bff;
-            border-radius: 50%;
-            width: 12px;
-            height: 12px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -115,45 +101,26 @@
         userMessage.innerText = message;
         chatBox.appendChild(userMessage);
 
-        // 显示 AI "正在输入..." 和加载动画
+        // 显示 AI "正在输入..."
         let botMessage = document.createElement("div");
         botMessage.className = "message bot-message";
-        botMessage.innerHTML = "AI 正在输入... <span class='loader'></span>";
+        botMessage.innerText = "AI 正在输入...";
         chatBox.appendChild(botMessage);
         input.value = "";
 
-        // 滚动到最新消息
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        // 编码用户输入
         var encodedMessage = encodeURIComponent(message);
         console.log("URL Encoded message:", encodedMessage);
-
         // 通过 SSE 方式获取流式返回的 AI 结果
-        let eventSource = new EventSource("/web/api/ai/chat/stream?modelType=" + modelType + "&prompt=" + encodedMessage);
-        let isFirstChunk = true; // 标记是否是第一条消息
-
+        let eventSource = new EventSource("/web/api/ai/chat/stream?modelType=${modelType}&prompt=" + encodedMessage);
         eventSource.onmessage = function(event) {
-            if (isFirstChunk) {
-                // 如果是第一条消息，替换初始文案
-                botMessage.innerHTML = event.data;
-                isFirstChunk = false;
-            } else {
-                // 否则，追加内容
-                botMessage.innerHTML += event.data;
-            }
-            // 滚动到最新消息
-            chatBox.scrollTop = chatBox.scrollHeight;
+            botMessage.innerText += event.data; // 逐步添加 AI 返回的文本
         };
-
         eventSource.onerror = function() {
             eventSource.close();
-            if (isFirstChunk) {
-                // 如果流式请求出错，且没有收到任何数据，显示错误信息
-                botMessage.innerHTML = "AI 响应失败，请重试。";
-            }
         };
     }
+
+
 </script>
 </body>
 </html>

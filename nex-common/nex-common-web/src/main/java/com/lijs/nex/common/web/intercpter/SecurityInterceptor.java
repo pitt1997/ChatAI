@@ -58,6 +58,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         }
         this.anonUrls.add("/error");
         this.anonUrls.add("/api/ai/chat");
+        this.anonUrls.add("/api/ai/chat/stream");
         this.anonUrls.add("/admin/user/getUserByName");
     }
 

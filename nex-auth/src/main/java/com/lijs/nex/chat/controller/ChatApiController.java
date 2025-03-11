@@ -1,13 +1,20 @@
 package com.lijs.nex.chat.controller;
 
+import com.lijs.nex.chat.llm.DeepSeekClient;
 import com.lijs.nex.chat.request.ChatRequest;
 import com.lijs.nex.chat.service.ChatService;
 import com.lijs.nex.common.base.session.SessionUser;
 import com.lijs.nex.common.base.token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author ljs
@@ -24,6 +31,13 @@ public class ChatApiController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    private final DeepSeekClient deepSeekClient;
+    private final ExecutorService executor = Executors.newFixedThreadPool(5);
+
+    public ChatApiController(DeepSeekClient deepSeekClient) {
+        this.deepSeekClient = deepSeekClient;
+    }
+
     @PostMapping("/chat")
     public ResponseEntity<String> chat(@RequestBody ChatRequest request, @RequestHeader("Authorization") String token) {
         // TODO 测试放行
@@ -36,5 +50,19 @@ public class ChatApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
         return ResponseEntity.ok(chatService.callAIModel(request.getMessage(), request.getModelType()));
+    }
+
+    @GetMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamChat(@RequestParam String prompt) {
+        SseEmitter emitter = new SseEmitter();
+        executor.execute(() -> {
+            try {
+                deepSeekClient.streamChat(prompt, emitter);
+                emitter.complete();
+            } catch (IOException e) {
+                emitter.completeWithError(e);
+            }
+        });
+        return emitter;
     }
 }

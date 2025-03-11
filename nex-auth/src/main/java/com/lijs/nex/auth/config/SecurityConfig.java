@@ -82,6 +82,7 @@ public class SecurityConfig {
                 .antMatchers("/auth/login").permitAll() // 允许所有用户访问 `/auth/login`
                 .antMatchers("/auth/chat").permitAll() // 允许所有用户访问 `/auth/login`
                 .antMatchers("/api/ai/chat").permitAll() // 允许所有用户访问 `/auth/login`
+                .antMatchers("/api/ai/chat/stream").permitAll() // 允许所有用户访问 `/auth/login`
                 .antMatchers("/auth/confirm").permitAll() // 允许所有用户访问 `/auth/login`
                 // .antMatchers("/public/**").permitAll() // 其他公开接口放行
                 .anyRequest().authenticated()
