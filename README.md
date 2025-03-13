@@ -69,11 +69,55 @@ backend
 ```
 
 #### 环境配置说明
-
-
-
 #### 配置文件说明
 
+# 项目启动
+## 1. 源码构建
+### 1.1 克隆代码
+```bash
+https://github.com/pitt1997/NexLM.git
+```
+### 1.2 配置数据库
+需要提前安装并启动 Redis 和 MySQL 服务，确保项目能正确连接。
+
+- 安装启动 MySQL 数据库。
+- 导入项目到 IntelliJ IDEA 中。
+- 运行 sql 文件夹中的 SQL 脚本，初始化数据库和表数据。
+- 本地启动时，可选择单机版启动（nex-boot），修改 src/main/resources/application.yml 中的数据库连接、Redis 配置。
+
+```yml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/nex
+    username: root
+    password: 12345678
+  redis:
+    sentinel: # 哨兵模式（默认不开启）
+      master: #mymaster
+      nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
+    host: 127.0.0.1
+    port: 6379
+    database: 1 # 默认使用 0 库
+    password: 123456
+```
+
+根据实际的情况进行修改ip, 用户名密码, 单机版启动可不需要依赖 Nacos。
+
+### 1.3 配置大模型接口密钥
+如果是对接 DeepSeek 在线 API 则需要配置密钥。如果是对接本地大模型需要修改本地大模型地址。
+com.lijs.nex.chat.llm.DeepSeekClient.java
+com.lijs.nex.chat.llm.LocalLLMClient.java
+
+### 1.4 启动项目
+
+- 导入项目到 IntelliJ IDEA 中。
+- 运行 BootApplication.java 启动 SpringBoot 项目。
+- 访问大模型集成平台（账号密码：admin/123456）：
+    - 登录页面地址：http://localhost:8080/web/auth/login
+    - 大模型页面地址: http://localhost:8080/web/auth/chat
+
+账号密码登录大模型统一认证之后会自动跳转到大模型页面。
 
 
 ### 技术选型
