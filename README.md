@@ -14,7 +14,7 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 # 项目介绍
 
-### 项目演示
+## 项目演示
 
 - 项目仓库（GitHub）：[https://github.com/pitt1997/NexLM](https://github.com/pitt1997/NexLM)
 - 项目演示地址：等待上线更新
@@ -24,25 +24,25 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 ![大模型页面](/docs/imgs/chat.png)
 页面持续优化中...
 
-#### 前后端分离版本
+### 前后端分离版本
 开发中...
 
-#### 后台管理系统
+### 后台管理系统
 
 ![后台管理系统]()
 
-### 架构图
+## 架构图
 
-#### 系统架构图
+### 系统架构图
 
 ![系统架构图](/docs/imgs/arch.png)
 
 
-#### 业务架构图
+### 业务架构图
 
 ![业务架构图]()
 
-### 组织结构
+## 代码结构
 
 ```
 backend
@@ -68,17 +68,16 @@ backend
 ├── sql -- 数据库 SQL
 ```
 
-#### 环境配置说明
-#### 配置文件说明
+### 环境配置说明
+### 配置文件说明
 
-# 项目启动
-## 1. 源码构建
+## 项目启动
 ### 1.1 克隆代码
 ```bash
-https://github.com/pitt1997/NexLM.git
+git clone https://github.com/pitt1997/NexLM.git
 ```
-### 1.2 配置数据库
-需要提前安装并启动 Redis 和 MySQL 服务，确保项目能正确连接。
+### 1.2 配置依赖环境
+需要提前安装并启动 Redis 和 MySQL 服务，确保项目能正确连接，微服务方式启动还需要 Nacos（单机版不需要）。
 
 - 安装启动 MySQL 数据库。
 - 导入项目到 IntelliJ IDEA 中。
@@ -91,10 +90,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/nex
     username: root
-    password: 12345678
+    password: 123456
   redis:
     sentinel: # 哨兵模式（默认不开启）
-      master: #mymaster
+      master: # mymaster（此处注释则表示不开启哨兵）
       nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
     host: 127.0.0.1
     port: 6379
@@ -102,12 +101,14 @@ spring:
     password: 123456
 ```
 
-根据实际的情况进行修改ip, 用户名密码, 单机版启动可不需要依赖 Nacos。
+根据实际的情况进行修改数据库和 redis 的 ip, 用户名密码, 单机版启动可不需要依赖 Nacos。
 
 ### 1.3 配置大模型接口密钥
-如果是对接 DeepSeek 在线 API 则需要配置密钥。如果是对接本地大模型需要修改本地大模型地址。
+如果是对接 DeepSeek 在线 API 则需要配置密钥；如果是对接本地大模型需要修改本地大模型地址。
+```bash
 com.lijs.nex.chat.llm.DeepSeekClient.java
 com.lijs.nex.chat.llm.LocalLLMClient.java
+```
 
 ### 1.4 启动项目
 
@@ -117,22 +118,19 @@ com.lijs.nex.chat.llm.LocalLLMClient.java
     - 登录页面地址：http://localhost:8080/web/auth/login
     - 大模型页面地址: http://localhost:8080/web/auth/chat
 
-账号密码登录大模型统一认证之后会自动跳转到大模型页面。
+使用账号密码登录大模型统一认证之后会自动跳转到大模型页面。
 
-
-### 技术选型
+## 技术选型
 
 后端技术栈
 
-|         技术          | 说明                   | 官网                                                                                                 |
-|:-------------------:|----------------------|----------------------------------------------------------------------------------------------------|
-| Spring & SpringMVC  | Java全栈应用程序框架和WEB容器实现 | [https://spring.io/](https://spring.io/)                                                           |
-|     SpringBoot      | Spring应用简化集成开发框架     | [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)                   |
-|       mybatis       | 数据库orm框架             | [https://mybatis.org](https://mybatis.org)                                                       |
+|         技术         | 说明                   | 官网                                                                                                 |
+|:------------------:|----------------------|----------------------------------------------------------------------------------------------------|
+| Spring & SpringMVC | Java全栈应用程序框架和WEB容器实现 | [https://spring.io/](https://spring.io/)                                                           |
+|     SpringBoot     | Spring应用简化集成开发框架     | [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)                   |
+|      MyBatis       | 数据库orm框架             | [https://mybatis.org](https://mybatis.org)                                                       |
 |    MyBatis-Plus    | 数据库orm框架             | [https://baomidou.com/](https://baomidou.com/)                                                     |
-| ... | ... | ... |
-
-
+|        ...         | ... | ... |
 
 
 ## 环境搭建
@@ -167,7 +165,6 @@ com.lijs.nex.chat.llm.LocalLLMClient.java
 |     maven     | 3.4+      | [https://maven.apache.org/](https://maven.apache.org/)                                                                 |
 |     mysql     | 5.7+/8.0+ | [https://www.mysql.com/downloads/](https://www.mysql.com/downloads/)                                                   |
 |     redis     | 5.0+      | [https://redis.io/download/](https://redis.io/download/)                                                               |
-| elasticsearch | 8.0.0+    | [https://www.elastic.co/cn/downloads/elasticsearch](https://www.elastic.co/cn/downloads/elasticsearch)                 |
 |     nginx     | 1.10+     | [https://nginx.org/en/download.html](https://nginx.org/en/download.html)                                               |
 |   rabbitmq    | 3.10.14+  | [https://www.rabbitmq.com/news.html](https://www.rabbitmq.com/news.html)                                               |
 |    ali-oss    | 3.15.1    | [https://help.aliyun.com/document_detail/31946.html](https://help.aliyun.com/document_detail/31946.html)               |
@@ -175,11 +172,4 @@ com.lijs.nex.chat.llm.LocalLLMClient.java
 |    docker     | 4.10.0+   | [https://docs.docker.com/desktop/](https://docs.docker.com/desktop/)                                                   |
 | let's encrypt | https证书   | [https://letsencrypt.org/](https://letsencrypt.org/)                                                                   |
 
-
-
-# 许可证
-
-[Apache License 2.0](https://github.com/pitt1997/NexLM/blob/main/LICENSE)
-
-Copyright (c) 2025 pitt1997
 
