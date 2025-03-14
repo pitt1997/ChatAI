@@ -11,6 +11,7 @@ public class AuthConstant {
     public static final String PASSWORD = "password";
     public static final String AUTH_URL = "/auth";
     public static final String LOGIN_URL = "/login";
+    public static final String LOGOUT_URL = "/logout";
     public static final String REDIRECT = "redirect";
 
     public static final String X_FORWARDED_URI_HEADER = "x-forwarded-uri";

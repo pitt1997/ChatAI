@@ -14,6 +14,26 @@
             align-items: center;
             height: 100vh;
         }
+        .header {
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-end;
+            background: #007bff;
+        }
+        .header button {
+            background: #000;  /* 退出按钮黑色 */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .header button:hover {
+            background: #333; /* 悬停时变成深灰色 */
+        }
         .chat-container {
             width: 600px;
             background: #fff;
@@ -73,6 +93,10 @@
 </head>
 <body>
 
+<div class="header">
+    <button onclick="logout()">退出登录</button>
+</div>
+
 <div class="chat-container">
     <h1>AI 双向流式聊天</h1>
     <div class="chat-box" id="chatBox"></div>
@@ -90,18 +114,18 @@
 
 <script>
     let ws;
-    let isStreaming = false; // 是否正在接收 AI 回复
+    let isStreaming = false;
 
     function initWebSocket() {
         ws = new WebSocket("ws://localhost:8080/web/api/ai/chat/websocket");
 
         ws.onopen = function() {
             console.log("WebSocket 连接成功！");
-            document.getElementById("stopButton").disabled = false; // 允许停止
+            document.getElementById("stopButton").disabled = false;
         };
 
         ws.onmessage = function(event) {
-            if (!isStreaming) return; // 如果停止了，就不处理新消息
+            if (!isStreaming) return;
             appendBotMessage(event.data);
         };
 
@@ -111,7 +135,7 @@
 
         ws.onclose = function() {
             console.log("WebSocket 连接关闭");
-            document.getElementById("stopButton").disabled = true; // 禁用停止按钮
+            document.getElementById("stopButton").disabled = true;
         };
     }
 
@@ -121,28 +145,34 @@
         if (message === "") return;
 
         let modelType = document.getElementById("modelType").value;
+        let token = localStorage.getItem("token");
 
         appendUserMessage(message);
 
-        // 如果 WebSocket 关闭了，重新连接
+        let payload = {
+            modelType: modelType,
+            message: message,
+            token: token
+        };
+
         if (!ws || ws.readyState === WebSocket.CLOSED) {
             initWebSocket();
-            setTimeout(() => ws.send(JSON.stringify({ modelType: modelType, message: message })), 500);
+            setTimeout(() => ws.send(JSON.stringify(payload)), 500);
         } else {
-            ws.send(JSON.stringify({ modelType: modelType, message: message }));
+            ws.send(JSON.stringify(payload));
         }
 
-        isStreaming = true; // 允许接收 AI 回复
+        isStreaming = true;
         input.value = "";
-        document.getElementById("stopButton").disabled = false; // 启用“停止”按钮
+        document.getElementById("stopButton").disabled = false;
     }
 
     function stopStreaming() {
-        isStreaming = false; // 停止接收数据
+        isStreaming = false;
         if (ws) {
-            ws.close(); // 关闭 WebSocket 连接
+            ws.close();
         }
-        document.getElementById("stopButton").disabled = true; // 禁用“停止”按钮
+        document.getElementById("stopButton").disabled = true;
     }
 
     function appendUserMessage(text) {
@@ -170,7 +200,27 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 初始化 WebSocket 连接
+    function logout() {
+        fetch("http://localhost:8080/web/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    // alert("登出成功！");
+                    localStorage.removeItem("token");
+                    window.location.href = "/web/auth/login"; // 重定向
+                } else {
+                    alert("登出失败: " + data.message);
+                }
+            })
+            .catch(error => console.error("登出错误:", error));
+    }
+
     initWebSocket();
 </script>
 

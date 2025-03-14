@@ -27,7 +27,6 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
         AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
     }
 
-    // json 格式返回
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // 设置相关cookie
@@ -38,8 +37,8 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(0))));
 
-        // 获取当前应用的 contextPath (动态前缀，如 "/nex-auth")
-        String contextPath = request.getContextPath();  // 例如 "/nex-auth"
+        // 获取当前应用的 contextPath (前缀例如 "/web")
+        String contextPath = request.getContextPath();
         // 登录成功后跳转到首页
         response.sendRedirect(contextPath + "/auth/chat");
     }
