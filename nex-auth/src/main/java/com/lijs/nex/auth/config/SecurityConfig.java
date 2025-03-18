@@ -77,17 +77,16 @@ public class SecurityConfig {
                 //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 //.and()
                 .authorizeRequests() // security 5.7 版本可简写这里
-                .antMatchers("/", "/auth", "/auth/login", "/auth/logout").permitAll() // 允许所有用户访问
-                .antMatchers("/auth/confirm").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/", "/auth", "/auth/login", "/auth/logout", "/auth/confirm").permitAll() // 允许所有用户访问
+                .anyRequest().authenticated() // 其他请求需要认证
                 .and()
                 .formLogin(formLogin -> formLogin
-                        .usernameParameter(AuthConstant.USERNAME)
-                        .passwordParameter(AuthConstant.PASSWORD)
-                        .loginProcessingUrl(AuthConstant.LOGIN_URL)
-                        .permitAll()
-                        .successHandler(customAuthSuccessHandler)
-                        .failureHandler(customAuthFailureHandler)
+                        .usernameParameter(AuthConstant.USERNAME) // 设置登录表单中的用户名字段的参数名称
+                        .passwordParameter(AuthConstant.PASSWORD) // 设置登录表单中的密码字段的参数名称
+                        .loginProcessingUrl(AuthConstant.LOGIN_URL) // 设置登录请求的 URL 地址（表单提交的 URL）
+                        .permitAll() // 允许所有人访问登录页面，不需要认证
+                        .successHandler(customAuthSuccessHandler) // 设置登录成功后的处理逻辑，可以定制成功后的跳转等
+                        .failureHandler(customAuthFailureHandler) // 设置登录失败后的处理逻辑，可以定制失败后的提示等
                 )
                 // 添加注销配置
                 .logout(logout -> logout

@@ -28,5 +28,9 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         // 获取异常信息
         logger.error("登录失败...{}", exception.getMessage());
+        // 获取当前应用的 contextPath (动态前缀，如 "/web")
+        String contextPath = request.getContextPath();
+        // 失败后重定向到登录页，并附带错误信息
+        response.sendRedirect(contextPath + "/auth/login?error=password error");
     }
 }
