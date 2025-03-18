@@ -9,10 +9,10 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nex-auth</artifactId>
+    <artifactId>nex-chat</artifactId>
     <packaging>jar</packaging>
 
-    <description>统一认证鉴权</description>
+    <description>统一 LM APP</description>
 
     <dependencies>
         <dependency>

@@ -1,6 +1,7 @@
 package com.lijs.nex.chat.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,15 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class ChatController {
 
-    @GetMapping("/chat")
-    public String chatPage() {
-        return "chat"; // 对应 chat.ftl 模板
-    }
-
     /**
      * chat页面
      */
-    @GetMapping("/auth/chat")
+    @GetMapping("/chat")
     public ModelAndView chat(ModelAndView modelAndView, @RequestParam(value = "modelType", defaultValue = "deepseek") String modelType) {
         // 默认模型类型
         modelAndView.addObject("modelType", modelType);

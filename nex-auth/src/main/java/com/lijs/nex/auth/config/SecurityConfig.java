@@ -78,7 +78,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests() // security 5.7 版本可简写这里
                 .antMatchers("/", "/auth", "/auth/login", "/auth/logout").permitAll() // 允许所有用户访问
-                //.antMatchers("/auth/chat").permitAll()
                 .antMatchers("/api/ai/chat").permitAll()
                 .antMatchers("/api/ai/chat/stream").permitAll()
                 .antMatchers("/api/ai/chat/websocket").permitAll()
@@ -111,7 +110,7 @@ public class SecurityConfig {
                                     // 从 Session 读取错误信息
                                     String errorMessage = (String) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
                                     if (errorMessage == null) {
-                                        errorMessage = "认证失败，请重新登录";
+                                        errorMessage = "未登录，请重新登录";
                                     }
                                     // 获取当前应用的 contextPath (动态前缀如 "/web")
                                     String contextPath = request.getContextPath();

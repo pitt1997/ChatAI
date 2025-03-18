@@ -35,20 +35,20 @@ spring:
         enabled: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/nex
+    url: jdbc:mysql://172.16.140.1:3306/nex
     username: root
-    password: 12345678
+    password: 123456
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #兼容的配置
   redis:
     sentinel: # 哨兵模式（默认不开启）
       master: #mymaster
-      nodes: 127.0.0.1:26379,127.0.0.1:26380,127.0.0.1:26381
-    host: 127.0.0.1
+      nodes: 172.16.140.1:26379,172.16.140.1:26380,172.16.140.1:26381
+    host: 172.16.140.1
     port: 6379
     database: 1 # 默认使用 0 库
-    password:
+    password: 123456
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

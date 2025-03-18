@@ -18,6 +18,12 @@
         <!-- 认证模块 -->
         <dependency>
             <groupId>com.lijs.nex</groupId>
+            <artifactId>nex-chat</artifactId>
+            <version>${nex.version}</version>
+        </dependency>
+        <!-- 认证模块 -->
+        <dependency>
+            <groupId>com.lijs.nex</groupId>
             <artifactId>nex-auth</artifactId>
             <version>${nex.version}</version>
         </dependency>

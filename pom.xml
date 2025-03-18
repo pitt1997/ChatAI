@@ -165,6 +165,7 @@
     <modules>
         <module>nex-boot</module>
         <module>nex-auth</module>
+        <module>nex-chat</module>
         <module>nex-common</module>
         <module>nex-core</module>
         <module>nex-manager</module>

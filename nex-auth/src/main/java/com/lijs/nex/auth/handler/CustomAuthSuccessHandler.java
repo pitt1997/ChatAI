@@ -29,18 +29,25 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+        // 方案1：返回 JSON 提示前端处理跳转
         // 设置相关cookie
         // CookieUtils.addCookie(response, "A", "false", AuthConstant.COOKIE_PATH, 0);
-        response.addHeader(AuthConstant.REDIRECT, index);
-        response.setContentType("application/json");
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(0))));
+//        response.addHeader(AuthConstant.REDIRECT, index);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(0))));
 
+        // 目标服务地址，例如 index 服务
+        String targetUrl = "http://127.0.0.1/web/chat";
+
+        // 方案2：直接重定向
         // 获取当前应用的 contextPath (前缀例如 "/web")
-        String contextPath = request.getContextPath();
+        // String contextPath = request.getContextPath();
         // 登录成功后跳转到首页
-        response.sendRedirect(contextPath + "/auth/chat");
+        // response.sendRedirect(contextPath + "/auth/chat");
+        response.sendRedirect(targetUrl);
     }
 
 
