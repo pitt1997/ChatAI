@@ -12,7 +12,7 @@
     <artifactId>nex-chat</artifactId>
     <packaging>jar</packaging>
 
-    <description>统一 LM APP</description>
+    <description>大模型chat</description>
 
     <dependencies>
         <dependency>

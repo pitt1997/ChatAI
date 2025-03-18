@@ -412,6 +412,16 @@
                 <version>${nex.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.lijs.nex</groupId>
+                <artifactId>nex-chat</artifactId>
+                <version>${nex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lijs.nex</groupId>
+                <artifactId>nex-auth</artifactId>
+                <version>${nex.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>

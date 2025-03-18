@@ -74,13 +74,10 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf().disable()
                 // 禁用会话管理 每次请求携带认证信息（JWT）
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //.and()
                 .authorizeRequests() // security 5.7 版本可简写这里
                 .antMatchers("/", "/auth", "/auth/login", "/auth/logout").permitAll() // 允许所有用户访问
-                .antMatchers("/api/ai/chat").permitAll()
-                .antMatchers("/api/ai/chat/stream").permitAll()
-                .antMatchers("/api/ai/chat/websocket").permitAll()
                 .antMatchers("/auth/confirm").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -106,6 +103,7 @@ public class SecurityConfig {
                 .authenticationProvider(customAuthenticationProvider(passwordEncoder())) // 添加自定义的 AuthenticationProvider
                 //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
+                        // 方式1:直接未登录跳转到登录页
                                 .authenticationEntryPoint((request, response, authException) -> {
                                     // 从 Session 读取错误信息
                                     String errorMessage = (String) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
@@ -117,7 +115,7 @@ public class SecurityConfig {
                                     // 失败后重定向到登录页，并附带错误信息
                                     response.sendRedirect(contextPath + "/auth/login?error=" + URLEncoder.encode(errorMessage, String.valueOf(StandardCharsets.UTF_8)));
                                 })
-                        // RESTFUL接口返回json方式
+                        // 方式2:RESTFUL接口返回json方式，前端自行解析
 //                        .authenticationEntryPoint((request, response, authException) -> {
 //                            response.setContentType("application/json;charset=UTF-8");
 //                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

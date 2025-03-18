@@ -37,7 +37,6 @@ import java.util.Set;
  * @description
  */
 @RestController
-//@RequestMapping("/auth")
 public class AuthController {
 
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -84,34 +83,6 @@ public class AuthController {
         modelAndView.addObject("principalName", principal.getName());
         modelAndView.setViewName("ftl/confirm");
         return modelAndView;
-    }
-
-
-    @GetMapping("/test")
-    public BaseResponse<String> test() {
-        System.out.println(1);
-        return ResultUtils.success("hello world");
-    }
-
-    @PostMapping("/loginP")
-    public BaseResponse<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
-        // 1. 校验用户名和密码不能为空
-        if (StringUtils.isEmpty(loginRequest.getUsername()) || StringUtils.isEmpty(loginRequest.getPassword())) {
-            return ResultUtils.error(ErrorCodeEnum.PARAMS_ERROR);
-        }
-
-        // 2. 尝试认证用户
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
-
-        System.out.println(authentication);
-
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setUserId(loginRequest.getUsername());
-        sessionUser.setUsername(loginRequest.getUsername());
-        String token = jwtTokenProvider.generateToken(sessionUser);
-        return ResultUtils.success(new JwtResponse(token));
     }
 
     @GetMapping(value = {AuthConstant.AUTH_URL, "/"}, name = "URL鉴权")

@@ -13,7 +13,7 @@ spring:
   application:
     name: auth
   security:
-    index-path: /index
+    index-path: /chat
   session:
     store-type: redis # session.setAttribute() 时将会话数据存储到 Redis 中
     redis:

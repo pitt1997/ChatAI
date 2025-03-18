@@ -103,8 +103,8 @@
     <div class="input-area">
         <input type="text" id="userInput" placeholder="请输入问题...">
         <select id="modelType">
-            <option value="chatgpt">ChatGPT</option>
             <option value="deepseek">DeepSeek</option>
+            <option value="chatgpt">ChatGPT</option>
             <option value="local">本地模型</option>
         </select>
         <button onclick="sendMessage()">发送</button>
