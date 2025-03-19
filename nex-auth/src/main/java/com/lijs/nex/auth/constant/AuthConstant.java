@@ -21,4 +21,13 @@ public class AuthConstant {
 
     public static final String COOKIE_PATH = "/";
 
+    public static final String COOKIE_TOKEN = "AUTH-TOKEN";
+
+    public static final String COOKIE_JSESSIONID = "JSESSIONID";
+
+    /**
+     * 过期时间 1小时
+     */
+    public static final int COOKIE_EXPIRE = 60 * 60;
+
 }

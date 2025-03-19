@@ -1,23 +1,16 @@
 package com.lijs.nex.auth.controller;
 
 import com.lijs.nex.auth.constant.AuthConstant;
-import com.lijs.nex.auth.dto.JwtResponse;
-import com.lijs.nex.auth.dto.LoginRequest;
 import com.lijs.nex.auth.service.AuthService;
-import com.lijs.nex.common.base.enums.ErrorCodeEnum;
-import com.lijs.nex.common.base.response.BaseResponse;
 import com.lijs.nex.common.base.session.SessionUser;
 import com.lijs.nex.common.base.tenant.TenantContextHolder;
-import com.lijs.nex.common.base.token.JwtTokenProvider;
-import com.lijs.nex.common.base.utils.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -41,21 +34,12 @@ public class AuthController {
 
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    private final AuthenticationManager authenticationManager;
-
-    @Resource
-    private JwtTokenProvider jwtTokenProvider;
-
     @Resource
     private AuthService authService;
 
-    public AuthController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
     /**
      * 授权码模式：认证页面
-     * @param modelAndView
+     *
      * @param error 表单登录失败处理回调的错误信息
      * @return ModelAndView
      */
@@ -68,6 +52,7 @@ public class AuthController {
 
     /**
      * 授权码模式：确认页面
+     *
      * @return {@link ModelAndView }
      */
     @GetMapping("/auth/confirm")

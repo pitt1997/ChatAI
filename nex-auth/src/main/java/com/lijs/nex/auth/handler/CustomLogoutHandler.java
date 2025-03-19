@@ -1,5 +1,9 @@
 package com.lijs.nex.auth.handler;
 
+import com.lijs.nex.auth.constant.AuthConstant;
+import com.lijs.nex.common.base.utils.CookieUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -15,15 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CustomLogoutHandler implements LogoutHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(CustomLogoutHandler.class);
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        // 获取前端传来的 Token
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            // 清除 Redis 里的 Token 记录（如果有存储）
-            // redisTemplate.delete("auth:token:" + token);
-            System.out.println("清除 Token: " + token);
-        }
+        // 清除 cookie
+        CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, "", AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE); // 过期时间 1 小时
+        CookieUtils.addCookie(response, AuthConstant.COOKIE_JSESSIONID, "", AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE); // 过期时间 1 小时
+        logger.info("退出成功, cookie 清除完成!");
     }
 }

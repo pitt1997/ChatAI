@@ -1,6 +1,7 @@
 package com.lijs.nex.chat.handler;
 
 import com.lijs.nex.chat.llm.DeepSeekClient;
+import com.lijs.nex.common.base.token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -19,8 +20,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
     private DeepSeekClient deepSeekClient;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketChatHandler(deepSeekClient), "/api/ai/chat/websocket").setAllowedOrigins("*");
+        registry.addHandler(new WebSocketChatHandler(deepSeekClient, jwtTokenProvider), "/api/ai/chat/websocket").setAllowedOrigins("*");
     }
 }
