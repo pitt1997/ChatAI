@@ -1,6 +1,7 @@
 package com.lijs.nex.auth.config;
 
 import com.lijs.nex.auth.constant.AuthConstant;
+import com.lijs.nex.auth.filter.JwtAuthenticationFilter;
 import com.lijs.nex.auth.handler.CustomAuthFailureHandler;
 import com.lijs.nex.auth.handler.CustomAuthSuccessHandler;
 import com.lijs.nex.auth.handler.CustomLogoutHandler;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
 import java.net.URLEncoder;
@@ -44,6 +46,8 @@ public class SecurityConfig {
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
     @Autowired
     private CustomLogoutHandler customLogoutHandler;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private final UserDetailsService userDetailsService;
 
@@ -73,9 +77,9 @@ public class SecurityConfig {
                 // 禁用httpBasic
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf().disable()
-                // 禁用会话管理 每次请求携带认证信息（JWT）
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //.and()
+                // 禁用会话管理, 通过每次请求携带认证信息（JWT）信息进行认证
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests() // security 5.7 版本可简写这里
                 .antMatchers("/", "/auth", "/auth/login", "/auth/logout", "/auth/confirm").permitAll() // 允许所有用户访问
                 .anyRequest().authenticated() // 其他请求需要认证
@@ -100,7 +104,8 @@ public class SecurityConfig {
                 // 禁用缓存
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
                 .authenticationProvider(customAuthenticationProvider(passwordEncoder())) // 添加自定义的 AuthenticationProvider
-                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // 这行代码的作用是在 UsernamePasswordAuthenticationFilter 之前执行 JwtAuthenticationFilter，让 Spring Security 先解析 JWT 并设置用户信息，然后再继续处理请求。
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
                         // 方式1:直接未登录跳转到登录页
                                 .authenticationEntryPoint((request, response, authException) -> {
