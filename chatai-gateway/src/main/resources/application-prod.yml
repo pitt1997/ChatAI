@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: chatai-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://chatai-user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

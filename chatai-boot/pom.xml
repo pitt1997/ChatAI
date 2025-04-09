@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>backend</artifactId>
+        <groupId>com.lijs.chatai</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>chatai-boot</artifactId>
+    <packaging>jar</packaging>
+
+    <description>单机版启动</description>
+
+    <dependencies>
+        <!-- 认证模块 -->
+        <dependency>
+            <groupId>com.lijs.chatai</groupId>
+            <artifactId>chatai-chat</artifactId>
+            <version>${chatai.version}</version>
+        </dependency>
+        <!-- 认证模块 -->
+        <dependency>
+            <groupId>com.lijs.chatai</groupId>
+            <artifactId>chatai-auth</artifactId>
+            <version>${chatai.version}</version>
+        </dependency>
+        <!-- 用户管理模块 -->
+        <dependency>
+            <groupId>com.lijs.chatai</groupId>
+            <artifactId>chatai-user</artifactId>
+            <version>${chatai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.chatai</groupId>
+            <artifactId>chatai-role-permission</artifactId>
+            <version>${chatai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lijs.chatai</groupId>
+            <artifactId>chatai-resource</artifactId>
+            <version>${chatai.version}</version>
+        </dependency>
+        <!-- 注册中心客户端 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- LB 扩展 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!-- 配置中心客户端 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!-- 认证中心模块 -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.lijs.chatai</groupId>-->
+        <!--            <artifactId>chatai-auth</artifactId>-->
+        <!--            <version>${chatai.version}</version>-->
+        <!--        </dependency>-->
+    </dependencies>
+
+</project>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lijs.chatai</groupId>
+        <artifactId>backend</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>chatai-common</artifactId>
+    <description>基础公共依赖</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>chatai-common-bom</module>
+        <module>chatai-common-core</module>
+        <module>chatai-common-redis</module>
+        <module>chatai-common-mybatis</module>
+        <module>chatai-common-flyway</module>
+        <module>chatai-common-kafka</module>
+        <module>chatai-common-feign</module>
+        <module>chatai-common-dubbo</module>
+        <module>chatai-common-web</module>
+        <module>chatai-common-spi</module>
+    </modules>
+
+</project>

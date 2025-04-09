@@ -1,0 +1,3 @@
+chatai:
+  platform:
+    database-type: MySQL # 数据库类型

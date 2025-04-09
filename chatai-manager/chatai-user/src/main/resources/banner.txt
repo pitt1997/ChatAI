@@ -1,0 +1,2 @@
+ChatAI by https://pitt1997.github.com
+Version: ${chatai.version}

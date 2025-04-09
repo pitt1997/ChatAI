@@ -1,6 +1,6 @@
 # 前言
 
-NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。通过统一认证登录，实现大模型服务统一代理，让用户能够轻松接入像 ChatGPT、Qwen、DeepSeek 这样的热门大模型，同时还支持这些模型本地部署集成，满足不同的应用场景和需求。
+ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。通过统一认证登录，实现大模型服务统一代理，让用户能够轻松接入像 ChatGPT、Qwen、DeepSeek 这样的热门大模型，同时还支持这些模型本地部署集成，满足不同的应用场景和需求。
 
 
 # 系统说明
@@ -16,7 +16,7 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 ## 项目演示
 
-- 项目仓库（GitHub）：[https://github.com/pitt1997/NexLM](https://github.com/pitt1997/NexLM)
+- 项目仓库（GitHub）：[https://github.com/pitt1997/ChatAI](https://github.com/pitt1997/ChatAI)
 - 项目演示地址：等待上线更新
 
 ![登录页面](/docs/imgs/login.png)
@@ -46,25 +46,25 @@ NexLM 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 ```
 backend
-├── nex-auth -- 认证授权模块
-├── nex-boot -- 单机部署启动模块
-├── nex-common -- 系统公共模块
-│    ├── nexus-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
-│    ├── nex-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
-│    ├── nex-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
-│    ├── nex-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
-│    ├── nex-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
-│    ├── nex-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
-│    ├── nex-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
-│    ├── nex-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
-├── nex-core -- 业务核心基础模块，业务公共依赖对象 VO/DTO/DO 等
-├── nex-gateway -- 网关模块，统一路由，服务发现等
-├── nex-manager -- 后台管理模块代码
-│    ├── nex-admin -- 后台管理启动模块
-│    ├── nex-user -- 用户中心
-│    ├── nex-resource -- 资源中心
-│    ├── nex-role-permission -- 角色授权中心
-├── nex-ui -- 前端模块
+├── chatai-auth -- 认证授权模块
+├── chatai-boot -- 单机部署启动模块
+├── chatai-common -- 系统公共模块
+│    ├── chatai-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性
+│    ├── chatai-common-core -- 平台核心基础模块，封装了常用的工具类、全局异常处理、通用配置等功能
+│    ├── chatai-common-dubbo -- 基于 Dubbo 进行微服务 RPC 远程调用的封装
+│    ├── chatai-common-feign -- 封装基于 Spring Cloud OpenFeign 的 HTTP 远程调用
+│    ├── chatai-common-flyway -- 数据库版本管理模块，基于 Flyway 实现数据库迁移
+│    ├── chatai-common-mybatis -- 封装 MyBatis 相关的配置和通用逻辑/数据源相关配置
+│    ├── chatai-common-redis -- 封装 Redis 相关的缓存操作，包括缓存管理、分布式锁等
+│    ├── chatai-common-web -- 提供 Web 层的通用功能，如全局拦截器、请求参数校验、统一返回结果等
+├── chatai-core -- 业务核心基础模块，业务公共依赖对象 VO/DTO/DO 等
+├── chatai-gateway -- 网关模块，统一路由，服务发现等
+├── chatai-manager -- 后台管理模块代码
+│    ├── chatai-admin -- 后台管理启动模块
+│    ├── chatai-user -- 用户中心
+│    ├── chatai-resource -- 资源中心
+│    ├── chatai-role-permission -- 角色授权中心
+├── chatai-ui -- 前端模块
 ├── sql -- 数据库 SQL
 ```
 
@@ -74,7 +74,7 @@ backend
 ## 项目启动
 ### 1.1 克隆代码
 ```bash
-git clone https://github.com/pitt1997/NexLM.git
+git clone https://github.com/pitt1997/ChatAI.git
 ```
 ### 1.2 配置依赖环境
 需要提前安装并启动 Redis 和 MySQL 服务，确保项目能正确连接，微服务方式启动还需要 Nacos（单机版不需要）。
@@ -82,13 +82,13 @@ git clone https://github.com/pitt1997/NexLM.git
 - 安装启动 MySQL 数据库。
 - 导入项目到 IntelliJ IDEA 中。
 - 运行 sql 文件夹中的 SQL 脚本，初始化数据库和表数据。
-- 本地启动时，可选择单机版启动（nex-boot），修改 src/main/resources/application.yml 中的数据库连接、Redis 配置。
+- 本地启动时，可选择单机版启动（chatai-boot），修改 src/main/resources/application.yml 中的数据库连接、Redis 配置。
 
 ```yml
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/nex
+    url: jdbc:mysql://127.0.0.1:3306/chatai
     username: root
     password: 123456
   redis:
@@ -106,8 +106,8 @@ spring:
 ### 1.3 配置大模型接口密钥
 如果是对接 DeepSeek 在线 API 则需要配置密钥；如果是对接本地大模型需要修改本地大模型地址。
 ```bash
-com.lijs.nex.chat.llm.DeepSeekClient.java
-com.lijs.nex.chat.llm.LocalLLMClient.java
+com.lijs.chatai.chat.llm.DeepSeekClient.java
+com.lijs.chatai.chat.llm.LocalLLMClient.java
 ```
 
 ### 1.4 启动项目

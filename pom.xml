@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.lijs.nex</groupId>
+    <groupId>com.lijs.chatai</groupId>
     <artifactId>backend</artifactId>
     <name>backend</name>
     <version>1.0.0-SNAPSHOT</version>
@@ -12,8 +12,8 @@
 
     <properties>
         <!-- project base -->
-        <nex.version>1.0.0-SNAPSHOT</nex.version>
-        <nex.project.name>backend</nex.project.name>
+        <chatai.version>1.0.0-SNAPSHOT</chatai.version>
+        <chatai.project.name>backend</chatai.project.name>
 
         <!-- maven -->
         <maven.version>3.8.1</maven.version>
@@ -163,14 +163,14 @@
     </dependencies>
 
     <modules>
-        <module>nex-boot</module>
-        <module>nex-auth</module>
-        <module>nex-chat</module>
-        <module>nex-common</module>
-        <module>nex-core</module>
-        <module>nex-manager</module>
-        <module>nex-gateway</module>
-        <module>nex-ui</module>
+        <module>chatai-boot</module>
+        <module>chatai-auth</module>
+        <module>chatai-chat</module>
+        <module>chatai-common</module>
+        <module>chatai-core</module>
+        <module>chatai-manager</module>
+        <module>chatai-gateway</module>
+        <module>chatai-ui</module>
     </modules>
 
     <!-- 项目依赖版本管理 -->
@@ -178,8 +178,8 @@
         <dependencies>
             <!-- 依赖公共版本定义 -->
             <dependency>
-                <groupId>com.lijs.nex</groupId>
-                <artifactId>nex-common-bom</artifactId>
+                <groupId>com.lijs.chatai</groupId>
+                <artifactId>chatai-common-bom</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>

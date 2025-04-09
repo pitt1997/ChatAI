@@ -1,2 +1,0 @@
-NexLM by https://pitt1997.github.com
-Version: ${nex.version}

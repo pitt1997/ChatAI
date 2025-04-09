@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lijs.chatai.common.feign.config.FeignAutoConfiguration
