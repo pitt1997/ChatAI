@@ -170,7 +170,7 @@
         <module>chatai-core</module>
         <module>chatai-manager</module>
         <module>chatai-gateway</module>
-        <module>chatai-ui</module>
+        <!-- <module>chatai-ui</module> -->
     </modules>
 
     <!-- 项目依赖版本管理 -->
