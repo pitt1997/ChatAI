@@ -84,9 +84,9 @@ public class JwtTokenProvider {
                 field.setAccessible(true);
                 field.set(sessionUser, value);
             } catch (NoSuchFieldException e) {
-                logger.warn("用户属性【`{}`】信息实体类中不存在则不进行处理", key);
+                logger.debug("field【`{}`】is not exist", key);
             } catch (IllegalAccessException e) {
-                logger.error("设置用户属性值异常 -> ", e);
+                logger.error("field error -> ", e);
             }
         });
         return sessionUser;
