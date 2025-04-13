@@ -25,8 +25,10 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const loginForm = ref()
 const loading = ref(false)
 
@@ -43,17 +45,18 @@ const rules = {
 const handleLogin = async () => {
   if (!loginForm.value) return
   
-  await loginForm.value.validate((valid: boolean) => {
+  await loginForm.value.validate(async (valid: boolean) => {
     if (valid) {
       loading.value = true
-      // 测试账号：admin/123456
-      if (form.username === 'admin' && form.password === '123456') {
-        ElMessage.success('登录成功')
-        router.push('/chat')
-      } else {
-        ElMessage.error('用户名或密码错误')
+      try {
+        const success = await authStore.login(form.username, form.password)
+        if (success) {
+          ElMessage.success('登录成功')
+          router.push('/chat')
+        }
+      } finally {
+        loading.value = false
       }
-      loading.value = false
     }
   })
 }

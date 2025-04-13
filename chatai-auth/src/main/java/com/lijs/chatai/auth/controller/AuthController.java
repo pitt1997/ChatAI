@@ -90,6 +90,6 @@ public class AuthController {
         // 忽略地址
         // 权限白名单
         // 鉴权
-        authService.auth(request, response, user);
+        authService.auth(request, response, user, path);
     }
 }

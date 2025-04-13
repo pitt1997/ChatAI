@@ -4,6 +4,8 @@ import com.lijs.chatai.auth.constant.AuthConstant;
 import com.lijs.chatai.common.base.session.SessionUser;
 import com.lijs.chatai.common.base.token.JwtTokenProvider;
 import com.lijs.chatai.common.base.utils.CookieUtils;
+import com.lijs.chatai.common.base.utils.JsonUtils;
+import com.lijs.chatai.common.base.utils.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Component
 public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
@@ -38,30 +42,47 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // 方式1: 重定向到首页
-        // 获取当前应用的 contextPath (前缀例如 "/web")
+        // Default behavior
+        handleJsonSuccess(request, response, authentication);
+    }
+
+    /**
+     * 重定向跳转方式
+     */
+    public void handleRedirectSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String contextPath = request.getContextPath();
         String redirectURL = contextPath + index;
+
         logger.info("登录成功，跳转至首页:{}", redirectURL);
 
         UsernamePasswordAuthenticationToken authenticationUser = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         SessionUser sessionUser = new SessionUser();
         sessionUser.setUsername(authenticationUser.getName());
         sessionUser.setUserId(authenticationUser.getName());
-        // 生成 Token（假设你用 JWT）
-        String token = jwtTokenProvider.generateToken( sessionUser);
-        response.setHeader("Authorization", "Bearer " + token);
-        CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, token, AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE); // 过期时间 1 小时
-        response.sendRedirect(redirectURL);
 
-        // 方式2: 直接返回json前端解析自行跳转
-//        // 设置相关cookie
-//        // CookieUtils.addCookie(response, "AC", "false", AuthConstant.COOKIE_PATH, 0);
-//        response.addHeader(AuthConstant.REDIRECT, redirectURL);
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(0))));
+        String token = jwtTokenProvider.generateToken(sessionUser);
+        response.setHeader("Authorization", "Bearer " + token);
+        CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, token, AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE);
+        response.sendRedirect(redirectURL);
+    }
+
+    /**
+     * 前后端分离场景：直接返回json
+     */
+    public void handleJsonSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        UsernamePasswordAuthenticationToken authenticationUser = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        SessionUser sessionUser = new SessionUser();
+        sessionUser.setUsername(authenticationUser.getName());
+        sessionUser.setUserId(authenticationUser.getName());
+
+        String token = jwtTokenProvider.generateToken(sessionUser);
+        response.setHeader("Authorization", "Bearer " + token);
+        CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, token, AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(ResultUtils.success(token))));
     }
 
 }

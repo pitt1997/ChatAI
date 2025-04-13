@@ -2,6 +2,7 @@ package com.lijs.chatai.auth.config;
 
 import com.lijs.chatai.auth.constant.AuthConstant;
 import com.lijs.chatai.auth.filter.JwtAuthenticationFilter;
+import com.lijs.chatai.auth.filter.UsernamePasswordJsonAuthFilter;
 import com.lijs.chatai.auth.handler.CustomAuthFailureHandler;
 import com.lijs.chatai.auth.handler.CustomAuthSuccessHandler;
 import com.lijs.chatai.auth.handler.CustomLogoutHandler;
@@ -59,6 +60,15 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public UsernamePasswordJsonAuthFilter jsonLoginFilter(AuthenticationManager authManager) {
+        UsernamePasswordJsonAuthFilter filter = new UsernamePasswordJsonAuthFilter(authManager);
+        filter.setAuthenticationSuccessHandler(customAuthSuccessHandler);
+        filter.setAuthenticationFailureHandler(customAuthFailureHandler);
+        return filter;
+    }
+
 
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider(PasswordEncoder passwordEncoder) {
@@ -132,6 +142,10 @@ public class SecurityConfig {
 //                        })
                 )
         ;
+
+        // 替换默认 UsernamePasswordAuthenticationFilter
+        http.addFilterAt(jsonLoginFilter(authenticationManager(null)), UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

@@ -58,7 +58,7 @@ public class AuthService {
         this.objectMapper = objectMapper;
     }
 
-    public void auth(HttpServletRequest request, HttpServletResponse response, SessionUser user) throws IOException {
+    public void auth(HttpServletRequest request, HttpServletResponse response, SessionUser user, String path) throws IOException {
         String userToken = opsForValue.get(getTokenKey(user));
 
         if (userToken != null) {

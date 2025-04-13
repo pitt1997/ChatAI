@@ -53,34 +53,79 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ChatDotRound, Setting } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/auth'
+import { createWebSocketService } from '@/services/websocket'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const inputMessage = ref('')
 const sending = ref(false)
 const messages = ref([
   { role: 'assistant', content: '你好！我是ChatAI助手，有什么我可以帮你的吗？' }
 ])
 
+// WebSocket服务
+const wsService = createWebSocketService('/api/ai/chat/websocket')
+
+onMounted(() => {
+  // 如果已登录，则连接WebSocket
+  if (authStore.isAuthenticated) {
+    console.log('User is authenticated, connecting to WebSocket...')
+    wsService.connect()
+    wsService.messages.value = messages.value
+  } else {
+    console.log('User is not authenticated, WebSocket connection skipped')
+  }
+})
+
+onUnmounted(() => {
+  console.log('Component unmounted, disconnecting WebSocket')
+  wsService.disconnect()
+})
+
 const sendMessage = async () => {
   if (!inputMessage.value.trim()) return
   
+  // 检查认证状态
+  if (!authStore.isAuthenticated) {
+    // 保存当前输入的消息
+    const currentMessage = inputMessage.value
+    // 清空输入框
+    inputMessage.value = ''
+    
+    // 提示用户登录
+    ElMessage.warning('请先登录后再发送消息')
+    // 跳转到登录页面
+    router.push('/login')
+    return
+  }
+
   const userMessage = inputMessage.value
   messages.value.push({ role: 'user', content: userMessage })
   inputMessage.value = ''
   
   sending.value = true
-  // TODO: 调用后端API
-  setTimeout(() => {
-    messages.value.push({ role: 'assistant', content: '这是一个模拟回复。' })
+  try {
+    console.log('Sending message to WebSocket:', userMessage)
+    // 发送消息到WebSocket
+    wsService.send(JSON.stringify({
+      content: userMessage,
+      type: 'chat'
+    }))
+  } catch (error) {
+    console.error('Error sending message:', error)
+    ElMessage.error('发送消息失败')
+  } finally {
     sending.value = false
-  }, 1000)
+  }
 }
 
 const handleLogout = () => {
+  authStore.logout()
   router.push('/login')
   ElMessage.success('已退出登录')
 }
