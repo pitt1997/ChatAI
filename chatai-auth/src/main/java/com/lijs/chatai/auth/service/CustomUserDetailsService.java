@@ -1,6 +1,7 @@
 package com.lijs.chatai.auth.service;
 
 import com.lijs.chatai.common.base.response.BaseResponse;
+import com.lijs.chatai.common.base.session.SessionUser;
 import com.lijs.chatai.core.api.client.UserApiClient;
 import com.lijs.chatai.core.model.request.UserLoginRequest;
 import com.lijs.chatai.core.model.vo.UserVO;
@@ -31,11 +32,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         BaseResponse<UserVO> userResponse = userApiClient.getUserByName(username);
         if (userResponse != null && userResponse.getData() != null) {
             UserVO user = userResponse.getData();
-            return new org.springframework.security.core.userdetails.User(
-                    user.getName(),
-                    user.getPassword(),
-                    Collections.emptyList() // TODO 可根据需求添加权限 URL权限
-            );
+            SessionUser sessionUser = new SessionUser();
+            sessionUser.setUserId(user.getId());
+            sessionUser.setUsername(user.getName());
+            sessionUser.setPassword(user.getPassword());
+            sessionUser.setOrganizationId(user.getOrganizationId());
+            sessionUser.setTenantId(user.getTenantId());
+            // TODO 可根据需求添加权限 URL权限
+            sessionUser.getAuthorities().addAll(Collections.emptyList());
+            return sessionUser;
         }
         throw new UsernameNotFoundException("用户名或密码错误");  // 这里抛出异常
     }

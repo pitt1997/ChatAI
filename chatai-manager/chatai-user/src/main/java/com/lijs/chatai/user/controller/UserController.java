@@ -9,6 +9,7 @@ import com.lijs.chatai.common.base.enums.ErrorCodeEnum;
 import com.lijs.chatai.common.base.exception.BusinessException;
 import com.lijs.chatai.common.base.response.BaseResponse;
 import com.lijs.chatai.common.base.session.SessionUser;
+import com.lijs.chatai.common.base.session.SessionUserHelper;
 import com.lijs.chatai.common.base.utils.ResultUtils;
 import com.lijs.chatai.common.web.controller.BaseController;
 import com.lijs.chatai.core.api.client.UserApiClient;
@@ -152,13 +153,7 @@ public class UserController extends BaseController implements UserApiClient {
 
     @GetMapping("/current")
     public BaseResponse<UserVO> getCurrentUser() {
-        HttpServletRequest request = this.getCurrentHttpRequest();
-        Object userObj = request.getSession().getAttribute(CommonConstants.User.USER_LOGIN_STATE);
-        SessionUser currentUser = (SessionUser) userObj;
-        if (currentUser == null) {
-            throw new BusinessException(ErrorCodeEnum.NOT_LOGIN, "currentUser为空");
-        }
-
+        SessionUser currentUser = SessionUserHelper.getUser();
         String userId = currentUser.getUserId();
         // TODO 校验用户是否合法
         UserDO user = userService.getById(userId);

@@ -1,6 +1,8 @@
 package com.lijs.chatai.common.web.controller;
 
 import com.lijs.chatai.common.base.constant.CommonConstants;
+import com.lijs.chatai.common.base.enums.ErrorCodeEnum;
+import com.lijs.chatai.common.base.exception.BusinessException;
 import com.lijs.chatai.common.base.session.SessionUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,16 @@ public class BaseController {
             throw new IllegalStateException("当前线程无法获取 HttpServletRequest");
         }
         return attributes.getRequest();
+    }
+
+    public SessionUser getCurrentHttpRequestUser() {
+        HttpServletRequest request = this.getCurrentHttpRequest();
+        Object userObj = request.getSession().getAttribute(CommonConstants.User.USER_LOGIN_STATE);
+        SessionUser currentUser = (SessionUser) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCodeEnum.NOT_LOGIN, "currentUser为空");
+        }
+        return currentUser;
     }
 
 }
