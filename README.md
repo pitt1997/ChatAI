@@ -22,7 +22,7 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 大模型集成页面
 
-![大模型页面](/docs/imgs/chat.png)
+![大模型页面](/docs/imgs/chats.png)
 
 ![大模型页面](/docs/imgs/models.png)
 
@@ -146,7 +146,8 @@ com.lijs.chatai.chat.llm.LocalLLMClient.java
 ### 1.5 启动项目（前后端分离）
 
 - 导入项目到 IntelliJ IDEA 中。
-- 运行 BootApplication.java 启动 SpringBoot 项目。
+- 后端运行 BootApplication.java 启动 SpringBoot 项目。
+- 前端运行 进入 chatai-ui 目录后执行 npm run dev（注意需要基于Node环境）。
 - 访问大模型集成平台（账号密码：admin/123456）：
   - 登录页面地址：http://localhost:3000/login
   - 大模型页面地址: http://localhost:3000/chat
