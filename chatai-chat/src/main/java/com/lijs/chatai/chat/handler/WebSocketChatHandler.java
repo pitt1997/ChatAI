@@ -3,6 +3,7 @@ package com.lijs.chatai.chat.handler;
 import com.lijs.chatai.chat.llm.DeepSeekClient;
 import com.lijs.chatai.common.base.session.SessionUser;
 import com.lijs.chatai.common.base.token.JwtTokenProvider;
+import com.lijs.chatai.common.base.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,11 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * WebSocket 处理 AI 聊天的消息
@@ -48,6 +51,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             token = extractTokenFromCookies(headers.get("cookie"));
         }
 
+        if (token == null) {
+            // 2、websocket支持从请求参数中传递票据
+            token = extractTokenFromRequest(session);
+        }
+
         // 3、校验 Token
         if (!validToken(token)) {
             logger.warn("WebSocket 连接失败，Token 无效：{}", session.getId());
@@ -60,11 +68,15 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        // json: modelType , message
         String userMessage = message.getPayload();
         logger.info("用户发送消息：{}", userMessage);
         try {
+            Map map = JsonUtils.toMap(userMessage);
+            String modelType = (String) map.get("modelType");
+            String prompt = (String) map.get("message");
             // 调用 AI 大模型接口，并流式返回消息
-            deepSeekClient.streamChatWs(userMessage, session);
+            deepSeekClient.streamChatWs(prompt, session);
         } catch (Exception e) {
             session.sendMessage(new TextMessage("AI 服务异常，请稍后重试。"));
             logger.error(e.getMessage(), e);
@@ -86,6 +98,16 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             if (authHeader.startsWith("Bearer ")) {
                 return authHeader.substring(7);
             }
+        }
+        return null;
+    }
+
+    /**
+     * 从请求头中提取 Token
+     */
+    private String extractTokenFromRequest(WebSocketSession session) {
+        if (session.getUri() != null) {
+            return UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams().getFirst("WebSocket-Authorization");
         }
         return null;
     }

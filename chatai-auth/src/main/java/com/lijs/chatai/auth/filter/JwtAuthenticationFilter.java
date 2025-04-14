@@ -78,6 +78,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
+
+        // Query 参数中获取（WebSocket 常用）
+        String webSocketToken = request.getParameter("WebSocket-Authorization");
+        if (webSocketToken != null) {
+            return webSocketToken;
+        }
+
         // 直接cookie中获取
         return CookieUtils.getCookie(request, AuthConstant.COOKIE_TOKEN);
     }
