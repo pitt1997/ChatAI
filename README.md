@@ -5,7 +5,7 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 # 系统说明
 
-- 基于 Spring Cloud 、Spring Boot、MyBatis-Plus、MySQL、Redis、Docker、Kafka 等技术栈实现的 LM 大模型统计平台；
+- 基于 Spring Cloud 、Spring Boot、MyBatis-Plus、MySQL、Redis、Docker、Kafka 等技术栈实现的大模型统一集成平台；
 - 采用主流的互联网架构，支持微服务架构和单体架构；
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
 - OAuth2 的 RBAC 企业快速开发平台...（持续开发中...）
@@ -43,7 +43,7 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 ![业务架构图]()
 
 ## 代码结构
-
+后端结构
 ```
 backend
 ├── chatai-auth -- 认证授权模块
@@ -66,6 +66,22 @@ backend
 │    ├── chatai-role-permission -- 角色授权中心
 ├── chatai-ui -- 前端模块
 ├── sql -- 数据库 SQL
+```
+
+前端结构
+```
+chatai-ui
+├── src
+│   ├── api -- API接口
+│   ├── assets -- 静态资源
+│   ├── components -- 通用组件
+│   ├── router -- 路由配置
+│   ├── stores -- 状态管理
+│   ├── styles -- 样式文件
+│   ├── utils -- 工具函数
+│   └── views -- 页面组件
+├── public -- 公共资源
+└── package.json -- 项目配置
 ```
 
 ### 环境配置说明
@@ -171,5 +187,4 @@ com.lijs.chatai.chat.llm.LocalLLMClient.java
 |      git      | 2.34.1    | [http://github.com/](http://github.com/)                                                                               |
 |    docker     | 4.10.0+   | [https://docs.docker.com/desktop/](https://docs.docker.com/desktop/)                                                   |
 | let's encrypt | https证书   | [https://letsencrypt.org/](https://letsencrypt.org/)                                                                   |
-
 
