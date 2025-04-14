@@ -42,7 +42,36 @@
                 </el-option>
               </el-select>
             </div>
-            <el-button type="text" @click="handleLogout">退出</el-button>
+            <div class="user-actions">
+              <template v-if="authStore.isAuthenticated">
+                <el-dropdown trigger="click" @command="handleUserCommand">
+                  <span class="user-dropdown">
+                    <el-avatar :size="32" :src="userAvatar" />
+                    <span class="username">{{ username }}</span>
+                    <el-icon><CaretBottom /></el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item command="profile">
+                        <el-icon><User /></el-icon>
+                        个人信息
+                      </el-dropdown-item>
+                      <el-dropdown-item command="settings">
+                        <el-icon><Setting /></el-icon>
+                        设置
+                      </el-dropdown-item>
+                      <el-dropdown-item divided command="logout">
+                        <el-icon><SwitchButton /></el-icon>
+                        退出登录
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </template>
+              <template v-else>
+                <el-button type="primary" @click="handleLogin">登录</el-button>
+              </template>
+            </div>
           </div>
         </el-header>
         
@@ -71,6 +100,116 @@
         </el-main>
       </el-container>
     </el-container>
+
+    <!-- 个人信息浮窗 -->
+    <el-dialog
+      v-model="profileDialogVisible"
+      title="个人信息"
+      width="500px"
+      :close-on-click-modal="false"
+      class="custom-dialog"
+    >
+      <div class="profile-content">
+        <div class="profile-header">
+          <el-avatar :size="64" :src="userAvatar" class="profile-avatar">
+            <el-icon><User /></el-icon>
+          </el-avatar>
+          <div class="profile-info">
+            <h3 class="profile-name">{{ profileForm.nickname || profileForm.name }}</h3>
+            <p class="profile-email">{{ profileForm.email }}</p>
+          </div>
+        </div>
+        <div class="profile-details">
+          <div class="detail-item">
+            <span class="detail-label">用户名</span>
+            <span class="detail-value">{{ profileForm.name }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">昵称</span>
+            <span class="detail-value">{{ profileForm.nickname }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">中文名</span>
+            <span class="detail-value">{{ profileForm.cnName }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">手机号</span>
+            <span class="detail-value">{{ profileForm.mobile }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">邮箱</span>
+            <span class="detail-value">{{ profileForm.email }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">性别</span>
+            <span class="detail-value">{{ profileForm.gender === 1 ? '男' : profileForm.gender === 2 ? '女' : '未知' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">组织机构</span>
+            <span class="detail-value">{{ profileForm.organizationId }}</span>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- 设置浮窗 -->
+    <el-dialog
+      v-model="settingsDialogVisible"
+      title="设置"
+      width="500px"
+      :close-on-click-modal="false"
+      class="custom-dialog"
+    >
+      <div class="settings-content">
+        <div class="settings-section">
+          <h3 class="section-title">外观</h3>
+          <el-form :model="settingsForm" label-width="0">
+            <el-form-item>
+              <el-radio-group v-model="settingsForm.theme" class="theme-radio-group">
+                <el-radio-button label="light">
+                  <el-icon><Sunny /></el-icon>
+                  <span>浅色</span>
+                </el-radio-button>
+                <el-radio-button label="dark">
+                  <el-icon><Moon /></el-icon>
+                  <span>深色</span>
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="section-title">功能</h3>
+          <el-form :model="settingsForm" label-width="0">
+            <el-form-item>
+              <div class="switch-item">
+                <div class="switch-label">
+                  <span>消息通知</span>
+                  <span class="switch-description">接收新消息通知</span>
+                </div>
+                <el-switch v-model="settingsForm.notification" />
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <div class="switch-item">
+                <div class="switch-label">
+                  <span>自动滚动</span>
+                  <span class="switch-description">新消息自动滚动到底部</span>
+                </div>
+                <el-switch v-model="settingsForm.autoScroll" />
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="settingsDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="saveSettings">保存</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -78,17 +217,30 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ChatDotRound, Setting, Aim, ChatDotSquare, User, MagicStick, Food } from '@element-plus/icons-vue'
+import { 
+  ChatDotRound, 
+  Setting, 
+  User, 
+  CaretBottom,
+  SwitchButton,
+  Sunny,
+  Moon
+} from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { createWebSocketService } from '@/services/websocket'
 import { onBeforeRouteLeave } from 'vue-router'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const wsService = createWebSocketService('/web/api/ai/chat/websocket')
+const messages = ref<Array<{ role: string; content: string; modelType?: string }>>([])
 const inputMessage = ref('')
 const isSending = ref(false)
-const messages = ref<Array<{ role: string; content: string; modelType?: string }>>([])
 const messagesContainer = ref<HTMLElement | null>(null)
+
+// 用户信息
+const username = ref('用户')
+const userAvatar = ref('')
 
 // 模型选择
 const models = [
@@ -100,9 +252,6 @@ const models = [
 ]
 const selectedModel = ref(models[0].value)
 
-// WebSocket服务
-const wsService = createWebSocketService('/web/api/ai/chat/websocket')
-
 const getModelLabel = (modelType?: string) => {
   const model = models.find(m => m.value === modelType)
   return model ? model.label : '未知模型'
@@ -111,7 +260,65 @@ const getModelLabel = (modelType?: string) => {
 const handleModelChange = (value: string) => {
   console.log('Model changed to:', value)
   selectedModel.value = value
-  // 可以在这里添加模型切换时的其他逻辑
+}
+
+const handleLogin = () => {
+  router.push('/login')
+}
+
+// 个人信息相关
+const profileDialogVisible = ref(false)
+const profileForm = ref({
+  name: '',
+  nickname: '',
+  cnName: '',
+  organizationId: '',
+  mobile: '',
+  email: '',
+  gender: 0
+})
+
+// 获取用户信息
+const fetchUserInfo = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/web/user/current', {
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('获取用户信息失败')
+    }
+    const data = await response.json()
+    profileForm.value = data
+    username.value = data.nickname || data.name
+  } catch (error) {
+    console.error('Error fetching user info:', error)
+    ElMessage.error('获取用户信息失败')
+  }
+}
+
+// 设置相关
+const settingsDialogVisible = ref(false)
+const settingsForm = ref({
+  theme: 'light',
+  notification: true,
+  autoScroll: true
+})
+
+const handleUserCommand = (command: string) => {
+  switch (command) {
+    case 'profile':
+      fetchUserInfo()
+      profileDialogVisible.value = true
+      break
+    case 'settings':
+      settingsDialogVisible.value = true
+      break
+    case 'logout':
+      handleLogout()
+      break
+  }
 }
 
 const scrollToBottom = async () => {
@@ -163,6 +370,12 @@ onMounted(() => {
     }
   } else {
     console.log('User is not authenticated, WebSocket connection skipped')
+  }
+
+  // 初始化设置
+  const savedSettings = localStorage.getItem('settings')
+  if (savedSettings) {
+    settingsForm.value = JSON.parse(savedSettings)
   }
 })
 
@@ -233,6 +446,13 @@ const handleEnterKey = (event: KeyboardEvent) => {
   }
   // 否则发送消息
   sendMessage()
+}
+
+const saveSettings = () => {
+  // 保存设置到本地存储
+  localStorage.setItem('settings', JSON.stringify(settingsForm.value))
+  ElMessage.success('设置已保存')
+  settingsDialogVisible.value = false
 }
 </script>
 
@@ -359,5 +579,179 @@ const handleEnterKey = (event: KeyboardEvent) => {
 
 .input-container .el-button {
   height: auto;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.user-dropdown:hover {
+  background-color: #f5f7fa;
+}
+
+.username {
+  font-size: 14px;
+  color: #606266;
+}
+
+.el-dropdown-menu {
+  padding: 4px 0;
+}
+
+.el-dropdown-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.el-dropdown-menu__item .el-icon {
+  font-size: 16px;
+}
+
+.custom-dialog :deep(.el-dialog__header) {
+  margin: 0;
+  padding: 20px;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.custom-dialog :deep(.el-dialog__body) {
+  padding: 0;
+}
+
+.profile-content {
+  padding: 0;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.profile-avatar {
+  margin-right: 16px;
+  background-color: #409eff;
+  color: white;
+}
+
+.profile-avatar .el-icon {
+  font-size: 32px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.profile-email {
+  margin: 0;
+  font-size: 14px;
+  color: #909399;
+}
+
+.profile-details {
+  padding: 24px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #606266;
+  font-size: 14px;
+}
+
+.detail-value {
+  color: #303133;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.settings-content {
+  padding: 0;
+}
+
+.settings-section {
+  padding: 24px;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.theme-radio-group {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-radio-group :deep(.el-radio-button__inner) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.switch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.switch-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.switch-description {
+  font-size: 12px;
+  color: #909399;
+}
+
+.dialog-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e4e7ed;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 </style> 

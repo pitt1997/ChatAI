@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class DeepSeekClient {
     private static final String API_URL = "https://api.deepseek.com/chat/completions"; // DeepSeek API 地址
-    private static final String API_KEY = "sk-f6ff96b349014328afdca21cc1ef0055"; // 替换为你的 API Key
+    private static final String API_KEY = "sk-xxx"; // 替换为你的 API Key
     private static final String MODEL = "deepseek-chat"; // deepseek-v3 / deepseek-r1
 
     private final RestTemplate restTemplate = new RestTemplate();
