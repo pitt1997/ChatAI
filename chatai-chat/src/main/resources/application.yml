@@ -52,6 +52,17 @@ spring:
     import:
       - optional:nacos:application-@profiles.active@.yml
       - optional:nacos:${spring.application.name}-@profiles.active@.yml
-
-
-
+llm:
+  clients:
+    openai:
+      api-url: https://api.openai.com
+      api-key: xxx
+      model: deepseek-r1
+      pricePerToken: 0.00001
+    gemini:
+      enabled: true
+      api-key: xxx
+      pricePerToken: 0.00001
+    wenxin:
+      enabled: false
+      pricePerToken: 0.00001

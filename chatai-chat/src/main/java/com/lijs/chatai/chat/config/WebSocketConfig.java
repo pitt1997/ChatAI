@@ -1,6 +1,7 @@
-package com.lijs.chatai.chat.handler;
+package com.lijs.chatai.chat.config;
 
-import com.lijs.chatai.chat.llm.DeepSeekClient;
+import com.lijs.chatai.chat.service.client.LLMClientFactory;
+import com.lijs.chatai.chat.websocket.WebSocketChatHandler;
 import com.lijs.chatai.common.base.token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +19,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
-    private DeepSeekClient deepSeekClient;
+    private LLMClientFactory LLMClientFactory;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketChatHandler(deepSeekClient, jwtTokenProvider), "/api/ai/chat/websocket").setAllowedOrigins("*");
+        registry.addHandler(new WebSocketChatHandler(LLMClientFactory, jwtTokenProvider), "/api/ai/chat/websocket").setAllowedOrigins("*");
     }
 }

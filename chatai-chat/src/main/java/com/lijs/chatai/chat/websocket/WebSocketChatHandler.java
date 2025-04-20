@@ -1,6 +1,6 @@
-package com.lijs.chatai.chat.handler;
+package com.lijs.chatai.chat.websocket;
 
-import com.lijs.chatai.chat.llm.DeepSeekClient;
+import com.lijs.chatai.chat.service.client.LLMClientFactory;
 import com.lijs.chatai.common.base.session.SessionUser;
 import com.lijs.chatai.common.base.token.JwtTokenProvider;
 import com.lijs.chatai.common.base.utils.JsonUtils;
@@ -33,10 +33,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final DeepSeekClient deepSeekClient;
+    private final LLMClientFactory LLMClientFactory;
 
-    public WebSocketChatHandler(DeepSeekClient deepSeekClient, JwtTokenProvider jwtTokenProvider) {
-        this.deepSeekClient = deepSeekClient;
+    public WebSocketChatHandler(LLMClientFactory LLMClientFactory,
+                                JwtTokenProvider jwtTokenProvider) {
+        this.LLMClientFactory = LLMClientFactory;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -76,7 +77,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             String modelType = (String) map.get("modelType");
             String prompt = (String) map.get("message");
             // 调用 AI 大模型接口，并流式返回消息
-            deepSeekClient.streamChatWs(prompt, session);
+            LLMClientFactory.getClient(modelType).streamChat(prompt, session);
         } catch (Exception e) {
             session.sendMessage(new TextMessage("AI 服务异常，请稍后重试。"));
             logger.error(e.getMessage(), e);

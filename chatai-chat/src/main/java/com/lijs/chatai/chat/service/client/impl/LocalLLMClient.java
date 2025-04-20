@@ -1,4 +1,4 @@
-package com.lijs.chatai.chat.llm;
+package com.lijs.chatai.chat.service.client.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

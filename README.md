@@ -122,8 +122,7 @@ spring:
 ### 1.3 配置大模型接口密钥
 如果是对接 DeepSeek 在线 API 则需要配置密钥；如果是对接本地大模型需要修改本地大模型地址。
 ```bash
-com.lijs.chatai.chat.llm.DeepSeekClient.java
-com.lijs.chatai.chat.llm.LocalLLMClient.java
+
 ```
 
 ### 1.4 启动项目
