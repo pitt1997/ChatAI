@@ -2,10 +2,13 @@ package com.lijs.chatai.chat.service.client.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lijs.chatai.chat.config.LLMClientsProperties;
+import com.lijs.chatai.chat.config.LlmClientConfig;
+import com.lijs.chatai.chat.config.LlmClientsProperties;
+import com.lijs.chatai.chat.enums.ModelTypeEnum;
 import com.lijs.chatai.chat.service.client.LLMClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RequestCallback;
@@ -29,27 +32,23 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DeepSeekClient implements LLMClient {
-
-    private static final String API_URL = "https://api.deepseek.com/chat/completions"; // DeepSeek API 地址
-    private static final String API_KEY = "sk-xxx"; // 替换为你的 API Key
-    private static final String MODEL = "deepseek-chat"; // deepseek-v3 / deepseek-r1
+public class DeepSeekR1Client implements LLMClient {
 
     private static final String MODEL_TYPE = "deepseek";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final LLMClientsProperties clientsProperties;
+    protected final LlmClientsProperties clientsProperties;
 
     @Override
     public String getType() {
-        return MODEL_TYPE;
+        return ModelTypeEnum.DEEPSEEK_R1.getCode();
     }
 
     @Override
     public String chat(String prompt) {
-        LLMClientsProperties.LLMClientConfig config = clientsProperties.getConfigs().get(MODEL_TYPE);
+        LlmClientConfig config = clientsProperties.getClients().get(getType());
         HttpHeaders headers = buildHeaders(config);
         Map<String, Object> body = buildBody(config, prompt);
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
@@ -62,12 +61,12 @@ public class DeepSeekClient implements LLMClient {
      */
     @Override
     public void streamChat(String prompt, WebSocketSession session) {
-        LLMClientsProperties.LLMClientConfig config = clientsProperties.getConfigs().get(MODEL_TYPE);
+        LlmClientConfig config = clientsProperties.getClients().get(getType());
         HttpHeaders headers = buildHeaders(config);
         Map<String, Object> body = buildBody(config, prompt);
         // 流式
         body.put("stream", true);
-        List<Map<String, String>> messages = Arrays.asList(
+        List<Map<String, String>> messages = Collections.singletonList(
                 new HashMap<String, String>() {{
                     put("role", "user");
                     put("content", prompt);
@@ -85,13 +84,39 @@ public class DeepSeekClient implements LLMClient {
         restTemplate.execute(config.getApiUrl(), HttpMethod.POST, requestCallback, response -> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()));
             String line;
+            boolean isReasoningPhase = false; // 标记当前是否处于思考阶段
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("data: ")) {
                     String json = line.substring(6).trim();
                     if (!json.equals("[DONE]")) {
-                        String content = extractContentStream(json);
-                        if (!content.isEmpty() && session.isOpen()) {
-                            session.sendMessage(new TextMessage(content)); // 发送给 WebSocket 客户端
+                        // 解析 JSON 并提取内容
+                        Pair<String, String> parsed = parseChunk(json);
+                        String messageType = parsed.getKey();
+                        String messageContent = parsed.getValue();
+
+                        // 根据类型处理消息
+                        if (session.isOpen()) {
+                            switch (messageType) {
+                                case "REASONING":
+                                    isReasoningPhase = true;
+                                    session.sendMessage(new TextMessage(
+                                            messageContent
+                                            //"{\"type\":\"REASONING\",\"data\":\"" + escapeJson(messageContent) + "\"}"
+                                    ));
+                                    break;
+                                case "IDLE":
+                                    isReasoningPhase = false;
+                                    session.sendMessage(new TextMessage(
+                                            "思考完毕\n"
+                                            //"{\"type\":\"REASONING_END\",\"data\":\"\"}"
+                                    ));
+                                    break;
+                                case "CONTENT":
+                                    session.sendMessage(new TextMessage(
+                                            messageContent
+                                    ));
+                                    break;
+                            }
                         }
                     }
                 }
@@ -102,11 +127,11 @@ public class DeepSeekClient implements LLMClient {
 
     @Override
     public boolean supports(String modelType) {
-        return false;
+        return true;
     }
 
     public void streamChatSEE(String prompt, SseEmitter emitter) {
-        LLMClientsProperties.LLMClientConfig config = clientsProperties.getConfigs().get(MODEL_TYPE);
+        LlmClientConfig config = clientsProperties.getClients().get(getType());
         HttpHeaders headers = buildHeaders(config);
         Map<String, Object> body = buildBody(config, prompt);
         // 流式
@@ -161,6 +186,40 @@ public class DeepSeekClient implements LLMClient {
         }
     }
 
+
+    private enum State {REASONING, CONTENT, IDLE}
+
+    private State currentState = State.IDLE;
+
+    public Pair<String, String> parseChunk(String json) {
+        try {
+            JsonNode delta = new ObjectMapper()
+                    .readTree(json)
+                    .path("choices").get(0).path("delta");
+
+            // 1. 处理思考内容
+            if (delta.has("reasoning_content")) {
+                JsonNode reasoningNode = delta.path("reasoning_content");
+                if (reasoningNode.isNull()) {
+                    currentState = State.CONTENT; // 切换到输出阶段
+                    return Pair.of(State.REASONING.name(), ""); // 发送思考结束信号
+                } else {
+                    currentState = State.REASONING;
+                    return Pair.of(State.REASONING.name(), reasoningNode.asText());
+                }
+            }
+
+            // 2. 处理正式输出（仅在 CONTENT 状态处理）
+            if (currentState == State.CONTENT && delta.has("content")) {
+                return Pair.of(State.CONTENT.name(), delta.path("content").asText());
+            }
+
+            return Pair.of(State.IDLE.name(), "");
+        } catch (Exception e) {
+            return Pair.of(State.IDLE.name(), "[ERROR]");
+        }
+    }
+
     private String extractContent(String responseBody) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -172,14 +231,14 @@ public class DeepSeekClient implements LLMClient {
         }
     }
 
-    public HttpHeaders buildHeaders(LLMClientsProperties.LLMClientConfig config) {
+    public HttpHeaders buildHeaders(LlmClientConfig config) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + config.getApiKey());
         return headers;
     }
 
-    private Map<String, Object> buildBody(LLMClientsProperties.LLMClientConfig config, String prompt) {
+    public Map<String, Object> buildBody(LlmClientConfig config, String prompt) {
         Map<String, Object> body = new HashMap<>();
         body.put("model", config.getModel()); // deepseek-v3 / deepseek-r1
         body.put("temperature", 1.0); // 可调整温度（默认推荐值 1.0）

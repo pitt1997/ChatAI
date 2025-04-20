@@ -1,6 +1,7 @@
 package com.lijs.chatai.chat.service.client.impl;
 
-import com.lijs.chatai.chat.config.LLMClientsProperties;
+import com.lijs.chatai.chat.config.LlmClientConfig;
+import com.lijs.chatai.chat.config.LlmClientsProperties;
 import com.lijs.chatai.chat.service.client.LLMClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class OpenAIClient implements LLMClient {
 
     private static final String MODEL_TYPE = "openai";
 
-    private final LLMClientsProperties clientsProperties;
+    private final LlmClientsProperties clientsProperties;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
@@ -33,7 +34,7 @@ public class OpenAIClient implements LLMClient {
 
     @Override
     public String chat(String prompt) {
-        LLMClientsProperties.LLMClientConfig config = clientsProperties.getConfigs().get("openai");
+        LlmClientConfig config = clientsProperties.getClients().get(getType());
 
         Map<String, Object> payload = new HashMap<String, Object>() {{
             put("model", config.getModel());
@@ -66,7 +67,7 @@ public class OpenAIClient implements LLMClient {
 
     @Override
     public boolean supports(String modelType) {
-        return false;
+        return true;
     }
 }
 

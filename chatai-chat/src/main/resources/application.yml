@@ -54,15 +54,23 @@ spring:
       - optional:nacos:${spring.application.name}-@profiles.active@.yml
 llm:
   clients:
+    deepseek-r1:
+      enabled: true
+      api-url: https://api.deepseek.com/chat/completions
+      api-key: sk-xxx
+      model: deepseek-r1
+    deepseek-v3:
+      enabled: true
+      api-url: https://api.deepseek.com/chat/completions
+      api-key: sk-xxx
+      model: deepseek-v3
     openai:
+      enabled: true
       api-url: https://api.openai.com
       api-key: xxx
-      model: deepseek-r1
-      pricePerToken: 0.00001
+      model: openai
     gemini:
       enabled: true
+      api-url: https://gemini.google.com
       api-key: xxx
-      pricePerToken: 0.00001
-    wenxin:
-      enabled: false
-      pricePerToken: 0.00001
+      model: gemini-pro

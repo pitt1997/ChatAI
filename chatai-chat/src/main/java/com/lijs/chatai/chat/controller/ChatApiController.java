@@ -1,6 +1,6 @@
 package com.lijs.chatai.chat.controller;
 
-import com.lijs.chatai.chat.service.client.impl.DeepSeekClient;
+import com.lijs.chatai.chat.service.client.impl.DeepSeekR1Client;
 import com.lijs.chatai.chat.model.request.ChatRequest;
 import com.lijs.chatai.chat.service.ChatService;
 import com.lijs.chatai.common.base.session.SessionUser;
@@ -30,11 +30,11 @@ public class ChatApiController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    private final DeepSeekClient deepSeekClient;
+    private final DeepSeekR1Client deepSeekR1Client;
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    public ChatApiController(DeepSeekClient deepSeekClient) {
-        this.deepSeekClient = deepSeekClient;
+    public ChatApiController(DeepSeekR1Client deepSeekR1Client) {
+        this.deepSeekR1Client = deepSeekR1Client;
     }
 
     @PostMapping("/chat")
@@ -52,7 +52,7 @@ public class ChatApiController {
         SseEmitter emitter = new SseEmitter();
         executor.execute(() -> {
             // SEE 流式回复
-            deepSeekClient.streamChatSEE(prompt, emitter);
+            deepSeekR1Client.streamChatSEE(prompt, emitter);
             emitter.complete();
         });
         return emitter;

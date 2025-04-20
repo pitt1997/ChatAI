@@ -1,6 +1,5 @@
 package com.lijs.chatai.chat.model.request;
 
-import com.lijs.chatai.chat.enums.ModelType;
 import lombok.Data;
 
 import java.time.LocalDateTime;

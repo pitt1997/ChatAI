@@ -64,3 +64,25 @@ platform:
   api-permission: # 不登录可访问
     anons:
       - /auth/login
+llm:
+  clients:
+    deepseek-r1:
+      enabled: true
+      api-url: https://api.deepseek.com/chat/completions
+      api-key: sk-xxx
+      model: deepseek-reasoner
+    deepseek-v3:
+      enabled: true
+      api-url: https://api.deepseek.com/chat/completions
+      api-key: sk-xxx
+      model: deepseek-chat
+    openai:
+      enabled: true
+      api-url: https://api.openai.com
+      api-key: xxx
+      model: openai
+    gemini:
+      enabled: true
+      api-url: https://gemini.google.com
+      api-key: xxx
+      model: gemini-pro
