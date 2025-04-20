@@ -89,11 +89,42 @@ export const useAuthStore = defineStore('auth', () => {
     return isAuthenticated.value
   }
 
+  const userInfo = ref<any>(null) // 可根据需要定义更具体的类型
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await fetch('/api/web/user/current', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token.value}`
+        }
+      })
+
+      const data = await response.json()
+      console.log('User info response:', data)
+
+      if (data.code === 0) {
+        userInfo.value = data.data
+        return data.data
+      } else {
+        ElMessage.error(data.message || '获取用户信息失败')
+        return null
+      }
+    } catch (error) {
+      console.error('User info error:', error)
+      ElMessage.error('获取用户信息异常，请检查网络或服务状态')
+      return null
+    }
+  }
+
   return {
     token,
     isAuthenticated,
+    userInfo,
     login,
     logout,
-    checkAuth
+    checkAuth,
+    fetchUserInfo
   }
+
 }) 

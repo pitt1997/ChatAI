@@ -18,14 +18,21 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 
 - 项目仓库（GitHub）：[https://github.com/pitt1997/ChatAI](https://github.com/pitt1997/ChatAI)
 - 项目演示地址：等待上线更新
+- 项目效果展示：
+
+大模型集成页面
+
+![大模型页面](/docs/imgs/chats.png)
+
+![大模型页面](/docs/imgs/models.png)
+
+前后端分离登录
+
+![登录页面](/docs/imgs/login2.png)
+
+单机后端版登录
 
 ![登录页面](/docs/imgs/login.png)
-
-![大模型页面](/docs/imgs/chat.png)
-页面持续优化中...
-
-### 前后端分离版本
-开发中...
 
 ### 后台管理系统
 
@@ -134,6 +141,15 @@ spring:
     - 大模型页面地址: http://localhost:8080/web/auth/chat
 
 使用账号密码登录大模型统一认证之后会自动跳转到大模型页面。
+
+### 1.5 启动项目（前后端分离）
+
+- 导入项目到 IntelliJ IDEA 中。
+- 后端运行 BootApplication.java 启动 SpringBoot 项目。
+- 前端运行 进入 chatai-ui 目录后执行 npm run dev（注意需要基于Node环境）。
+- 访问大模型集成平台（账号密码：admin/123456）：
+  - 登录页面地址：http://localhost:3000/login
+  - 大模型页面地址: http://localhost:3000/chat
 
 ## 技术选型
 

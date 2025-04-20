@@ -18,14 +18,14 @@
           </el-menu>
         </div>
       </el-aside>
-      
+
       <el-container>
         <el-header class="chat-header">
           <div class="header-content">
             <div class="model-selector">
-              <el-select 
-                v-model="selectedModel" 
-                placeholder="选择模型" 
+              <el-select
+                v-model="selectedModel"
+                placeholder="选择模型"
                 @change="handleModelChange"
                 class="model-select"
               >
@@ -36,7 +36,7 @@
                   :value="model.value"
                 >
                   <span class="model-option">
-                    <img :src="`/src/assets/icons/${model.icon}.svg`" :alt="model.label" class="model-icon" />
+                    <img :src="`/src/assets/svg/${model.icon}.svg`" :alt="model.label" class="model-icon" />
                     <span>{{ model.label }}</span>
                   </span>
                 </el-option>
@@ -74,7 +74,7 @@
             </div>
           </div>
         </el-header>
-        
+
         <el-main class="chat-main">
           <div class="message-container" ref="messagesContainer">
             <div v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="input-container">
             <el-input
               v-model="inputMessage"
@@ -217,10 +217,10 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { 
-  ChatDotRound, 
-  Setting, 
-  User, 
+import {
+  ChatDotRound,
+  Setting,
+  User,
   CaretBottom,
   SwitchButton,
   Sunny,
@@ -245,9 +245,11 @@ const userAvatar = ref('')
 // 模型选择
 const models = [
   { label: 'DeepSeek', value: 'deepseek', icon: 'deepseek' },
-  { label: 'GPT-4', value: 'gpt4', icon: 'gpt4' },
-  { label: 'Claude', value: 'claude', icon: 'claude' },
-  { label: 'Qwen', value: 'qwen', icon: 'qwen' },
+  { label: 'GPT-4o', value: 'gpt4o', icon: 'openai' },
+  { label: 'Gemini', value: 'gemini', icon: 'google' },
+  { label: '文心一言', value: 'yiyan', icon: 'baidu' },
+  // { label: 'Claude', value: 'claude', icon: 'claude' },
+  { label: '通义千问', value: 'qwen', icon: 'qianwen' },
   { label: '豆包', value: 'doubao', icon: 'doubao' }
 ]
 const selectedModel = ref(models[0].value)
@@ -281,17 +283,11 @@ const profileForm = ref({
 // 获取用户信息
 const fetchUserInfo = async () => {
   try {
-    const response = await fetch('http://localhost:8080/web/user/current', {
-      headers: {
-        'Authorization': `Bearer ${authStore.token}`
-      }
-    })
-    if (!response.ok) {
-      throw new Error('获取用户信息失败')
+    const userInfo = await authStore.fetchUserInfo()
+    if (userInfo) {
+      profileForm.value = userInfo
+      username.value = userInfo.nickname || userInfo.name
     }
-    const data = await response.json()
-    profileForm.value = data
-    username.value = data.nickname || data.name
   } catch (error) {
     console.error('Error fetching user info:', error)
     ElMessage.error('获取用户信息失败')
@@ -334,7 +330,7 @@ onMounted(() => {
     console.log('User is authenticated, connecting to WebSocket...')
     wsService.connect()
     wsService.messages.value = messages.value
-    
+
     // 添加WebSocket消息处理
     wsService.ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data)
@@ -348,7 +344,7 @@ onMounted(() => {
           // 如果不是JSON，直接使用文本内容
           content = event.data
         }
-        
+
         // 检查是否已经有助手的最新消息
         const lastMessage = messages.value[messages.value.length - 1]
         if (lastMessage && lastMessage.role === 'assistant') {
@@ -362,7 +358,7 @@ onMounted(() => {
             modelType: selectedModel.value
           })
         }
-        
+
         scrollToBottom()
       } catch (error) {
         console.error('Error handling WebSocket message:', error)
@@ -401,17 +397,17 @@ const sendMessage = async () => {
       message: inputMessage.value,
       modelType: selectedModel.value
     }
-    
+
     // 添加用户消息，包含模型类型
     messages.value.push({
       role: 'user',
       content: inputMessage.value,
       modelType: selectedModel.value
     })
-    
+
     await scrollToBottom()
     inputMessage.value = ''
-    
+
     // 发送消息到WebSocket
     wsService.send(JSON.stringify(message))
   } catch (error) {
@@ -754,4 +750,4 @@ const saveSettings = () => {
   justify-content: flex-end;
   gap: 12px;
 }
-</style> 
+</style>

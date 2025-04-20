@@ -6,6 +6,7 @@ import com.lijs.chatai.common.base.token.JwtTokenProvider;
 import com.lijs.chatai.common.base.utils.CookieUtils;
 import com.lijs.chatai.common.base.utils.JsonUtils;
 import com.lijs.chatai.common.base.utils.ResultUtils;
+import com.lijs.chatai.common.cache.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,17 +24,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private final Logger logger = LoggerFactory.getLogger(CustomAuthSuccessHandler.class);
 
+    private final static String USER_TOKEN = "UserToken-%s";
+
     @Value("${spring.security.index-path}")
     private String index;
 
     @Resource
     private JwtTokenProvider jwtTokenProvider;
+
+    @Resource
+    private CacheService cacheService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -63,6 +70,8 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtTokenProvider.generateToken(sessionUser);
         response.setHeader("Authorization", "Bearer " + token);
         CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, token, AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE);
+        cacheService.setWithTTL(USER_TOKEN + token, sessionUser, 60 * 60 * 1000);
+
         response.sendRedirect(redirectURL);
     }
 
@@ -71,13 +80,12 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
      */
     public void handleJsonSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         UsernamePasswordAuthenticationToken authenticationUser = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        SessionUser sessionUser = new SessionUser();
-        sessionUser.setUsername(authenticationUser.getName());
-        sessionUser.setUserId(authenticationUser.getName());
+        SessionUser sessionUser = (SessionUser) authenticationUser.getPrincipal();
 
         String token = jwtTokenProvider.generateToken(sessionUser);
         response.setHeader("Authorization", "Bearer " + token);
         CookieUtils.addCookie(response, AuthConstant.COOKIE_TOKEN, token, AuthConstant.COOKIE_PATH, AuthConstant.COOKIE_EXPIRE);
+        cacheService.setWithTTL(USER_TOKEN + token, sessionUser, 60 * 60 * 1000);
 
         response.setContentType("application/json");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
