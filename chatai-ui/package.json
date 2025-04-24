@@ -9,12 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.0",
-    "vue-router": "^4.2.0",
-    "pinia": "^2.1.0",
-    "element-plus": "^2.4.0",
     "@vueuse/core": "^10.0.0",
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "element-plus": "^2.4.0",
+    "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.10",
+    "pinia": "^2.1.0",
+    "vue": "^3.3.0",
+    "vue-router": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -26,4 +29,4 @@
     "vite": "^4.5.0",
     "vue-tsc": "^1.8.0"
   }
-} 
+}
