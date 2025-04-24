@@ -6,7 +6,7 @@
           <h2>ChatAI 登录</h2>
         </div>
       </template>
-      <el-form :model="form" :rules="rules" ref="loginForm">
+      <el-form :model="form" :rules="rules" ref="loginForm" @keyup.enter.native="handleLogin">
         <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="用户名" prefix-icon="el-icon-user" />
         </el-form-item>
