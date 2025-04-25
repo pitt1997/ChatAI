@@ -7,6 +7,11 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref('')
   const isAuthenticated = ref(false)
 
+  // 新增方法
+  const initialize = () => {
+    checkAuth()
+  }
+
   const login = async (username: string, password: string) => {
     try {
       console.log('Login request:', { username, password })
@@ -116,6 +121,9 @@ export const useAuthStore = defineStore('auth', () => {
       return null
     }
   }
+
+  // 初始化
+  initialize()
 
   return {
     token,
