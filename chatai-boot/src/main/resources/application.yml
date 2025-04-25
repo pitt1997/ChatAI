@@ -86,3 +86,8 @@ llm:
       api-url: https://gemini.google.com
       api-key: xxx
       model: gemini-pro
+    local:
+      enabled: true
+      api-url: http://172.16.140.1:11434/api/generate
+      api-key: xxx
+      model: deepseek-coder:latest

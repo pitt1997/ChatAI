@@ -254,6 +254,7 @@ const userAvatar = ref('')
 const models = [
   { label: 'DeepSeek-R1', value: 'deepseek-r1', icon: 'deepseek' },
   { label: 'DeepSeek-V3', value: 'deepseek-v3', icon: 'deepseek' },
+  { label: '本地大模型', value: 'local', icon: 'deepseek' },
   { label: 'GPT-4o', value: 'gpt4o', icon: 'openai' },
   { label: 'Gemini', value: 'gemini', icon: 'google' },
   { label: '文心一言', value: 'yiyan', icon: 'baidu' },
