@@ -76,8 +76,8 @@
         </el-header>
 
         <el-main class="chat-main">
-          <div class="message-container" ref="messagesContainer">
-            <div v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
+          <section class="message-container" ref="messagesContainer">
+            <article v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
               <div class="message-content">
                 <!-- 内容区域 -->
                 <div class="message-text" v-if="message.role === 'user'">
@@ -92,8 +92,8 @@
                   {{ getModelLabel(message.modelType) }}
                 </div>
               </div>
-            </div>
-          </div>
+            </article>
+          </section>
 
           <div class="input-container">
             <el-input
@@ -462,16 +462,15 @@ const saveSettings = () => {
 
 import { marked } from 'marked'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github-dark.css' // 更明显的主题
-//import 'highlight.js/styles/github.css';
+import 'github-markdown-css/github-markdown-light.css'; // 浅色主题
+import 'highlight.js/styles/github-dark.css'; // 或 github.css
 
-marked.setOptions({
-  highlight(code, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(code, { language: lang }).value;
-    }
-    return hljs.highlightAuto(code).value;
-  }
+onMounted(() => {
+  nextTick(() => {
+    document.querySelectorAll('pre code').forEach((el) => {
+      hljs.highlightElement(el as HTMLElement)
+    })
+  })
 })
 
 function renderMarkdown(text: string) {
@@ -777,23 +776,6 @@ function renderMarkdown(text: string) {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-}
-
-.markdown-body pre code {
-  display: block;
-  padding: 1em;
-  background-color: #f6f8fa; /* GitHub 风格浅灰 */
-  border-radius: 6px;
-  overflow-x: auto;
-  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 13px;
-}
-
-.markdown-body code {
-  background-color: rgba(175, 184, 193, 0.2); /* 行内代码背景 */
-  padding: 0.2em 0.4em;
-  border-radius: 6px;
-  font-size: 85%;
 }
 
 </style>
