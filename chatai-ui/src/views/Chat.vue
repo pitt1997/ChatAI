@@ -100,7 +100,7 @@
               v-model="inputMessage"
               type="textarea"
               :rows="3"
-              placeholder="输入消息，按回车键发送..."
+              placeholder="输入消息，按 Enter 发送，Shift+Enter 换行"
               @keydown.enter.prevent="handleEnterKey"
             />
             <el-button type="primary" @click="sendMessage" :loading="isSending">发送</el-button>
@@ -448,10 +448,19 @@ onBeforeRouteLeave((to, from, next) => {
 const handleEnterKey = (event: KeyboardEvent) => {
   // 如果按下 Shift + Enter，允许换行
   if (event.shiftKey) {
-    return
+    // 如果按住了 Shift，就让 textarea 正常换行
+    const textarea = event.target as HTMLTextAreaElement;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.value =
+        textarea.value.substring(0, start) +
+        '\n' +
+        textarea.value.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start + 1;
+  } else {
+    // 直接发送消息
+    sendMessage();
   }
-  // 否则发送消息
-  sendMessage()
 }
 
 const saveSettings = () => {
