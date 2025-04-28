@@ -72,12 +72,31 @@ public class LocalLLMClient implements LLMClient {
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            // 解析每行 JSON（如 {"response":"你","done":false}）
                             JsonNode jsonNode = objectMapper.readTree(line);
                             if (jsonNode.has("response")) {
                                 String content = jsonNode.get("response").asText();
                                 if (session.isOpen()) {
-                                    session.sendMessage(new TextMessage(content));
+                                    if (isReasoningModel(config.getModel())) {
+                                        // 推理型模型，包装成 {"type":"REASONING", "data":"xxx"}
+                                        Map<String, String> wsMsg = new HashMap<>();
+                                        wsMsg.put("type", "REASONING");
+                                        wsMsg.put("data", content);
+                                        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(wsMsg)));
+                                    } else {
+                                        // 普通模型，直接发 CONTENT
+                                        Map<String, String> wsMsg = new HashMap<>();
+                                        wsMsg.put("type", "CONTENT");
+                                        wsMsg.put("data", content);
+                                        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(wsMsg)));
+                                    }
+                                }
+                            }
+                            if (jsonNode.has("done") && jsonNode.get("done").asBoolean()) {
+                                if (session.isOpen()) {
+                                    Map<String, String> doneMsg = new HashMap<>();
+                                    doneMsg.put("type", "DONE");
+                                    doneMsg.put("data", "");
+                                    session.sendMessage(new TextMessage(objectMapper.writeValueAsString(doneMsg)));
                                 }
                             }
                         }
@@ -108,4 +127,9 @@ public class LocalLLMClient implements LLMClient {
     public boolean supports(String modelType) {
         return true;
     }
+
+    private boolean isReasoningModel(String model) {
+        return "deepseek-r1".equals(model) || "其他推理模型".equals(model);
+    }
+
 }

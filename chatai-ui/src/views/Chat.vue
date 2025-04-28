@@ -362,7 +362,7 @@ onMounted(() => {
         const type = parsed.type;
         const content = parsed.data;
 
-        const currentModelType = settingsForm.value.modelType || 'deepseek-r1'; // 当前选中的模型
+        const currentModelType = selectedModel.value; // 当前选中的模型
         const isReasoning = isReasoningModel(currentModelType);
 
         if (isReasoning) {
@@ -372,7 +372,7 @@ onMounted(() => {
               const newMessage = {
                 role: 'assistant',
                 content: content,
-                modelType: 'deepseek-r1',
+                modelType: currentModelType,
                 isReasoning: true,
               };
               messages.value.push(newMessage);
@@ -399,7 +399,7 @@ onMounted(() => {
               const newMessage = {
                 role: 'assistant',
                 content: content,
-                modelType: 'deepseek-r1',
+                modelType: currentModelType,
               };
               messages.value.push(newMessage);
               currentMessage.value = newMessage;

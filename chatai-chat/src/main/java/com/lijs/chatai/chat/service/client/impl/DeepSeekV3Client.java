@@ -15,6 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,13 +80,29 @@ public class DeepSeekV3Client extends DeepSeekR1Client {
                     if (!json.equals("[DONE]")) {
                         String content = extractContentStream(json);
                         if (content != null && !content.isEmpty() && session.isOpen()) {
-                            session.sendMessage(new TextMessage(content));
+                            sendWsJsonMessage(session, isReasoningModel(config.getModel()) ? "REASONING" : "CONTENT", content);
+                        }
+                    } else {
+                        // 收到 [DONE]，推送 DONE 消息
+                        if (session.isOpen()) {
+                            sendWsJsonMessage(session, "DONE", "");
                         }
                     }
                 }
             }
             return null;
         });
+    }
+
+    private void sendWsJsonMessage(WebSocketSession session, String type, String data) throws IOException {
+        Map<String, String> message = new HashMap<>();
+        message.put("type", type);
+        message.put("data", data);
+        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+    }
+
+    private boolean isReasoningModel(String model) {
+        return "deepseek-r1".equalsIgnoreCase(model);
     }
 
     private String extractContentStream(String json) {
