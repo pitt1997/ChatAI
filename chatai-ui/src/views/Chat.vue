@@ -241,10 +241,13 @@ import { onBeforeRouteLeave } from 'vue-router'
 const router = useRouter()
 const authStore = useAuthStore()
 const wsService = createWebSocketService('/web/api/ai/chat/websocket')
-const messages = ref<Array<{ role: string; content: string; modelType?: string }>>([])
+const messages = ref<Array<{ role: string; content: string; modelType?: string; isReasoning?: boolean }>>([]);
 const inputMessage = ref('')
 const isSending = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
+
+// 当前推理中的消息
+const currentReasoningMessage = ref<{ role: string; content: string; modelType?: string; isReasoning?: boolean } | null>(null);
 
 // 用户信息
 const username = ref('用户')
@@ -341,39 +344,95 @@ onMounted(() => {
     wsService.connect()
     wsService.messages.value = messages.value
 
-    // 添加WebSocket消息处理
+    // 当前正在生成的 AI message（包含思考+回答）
+    let currentMessage = ref(null);
+
     wsService.ws.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data)
+      console.log('WebSocket message received:', event.data);
       try {
-        // 尝试解析JSON，如果失败则直接使用文本内容
-        let content = event.data
+        const data = event.data;
+        let parsed;
         try {
-          const data = JSON.parse(event.data)
-          content = data.content || data.message || event.data
+          parsed = JSON.parse(data);
         } catch (e) {
-          // 如果不是JSON，直接使用文本内容
-          content = event.data
+          console.error('解析服务器消息失败:', data);
+          return;
         }
 
-        // 检查是否已经有助手的最新消息
-        const lastMessage = messages.value[messages.value.length - 1]
-        if (lastMessage && lastMessage.role === 'assistant') {
-          // 如果是助手的最新消息，追加内容
-          lastMessage.content += content
+        const type = parsed.type;
+        const content = parsed.data;
+
+        const currentModelType = settingsForm.value.modelType || 'deepseek-r1'; // 当前选中的模型
+        const isReasoning = isReasoningModel(currentModelType);
+
+        if (isReasoning) {
+          if (type === "REASONING") {
+            if (!currentMessage.value) {
+              // 第一次推理，新建 assistant message
+              const newMessage = {
+                role: 'assistant',
+                content: content,
+                modelType: 'deepseek-r1',
+                isReasoning: true,
+              };
+              messages.value.push(newMessage);
+              currentMessage.value = newMessage;
+            } else {
+              // 正在推理中，继续追加思考内容
+              currentMessage.value.content += content;
+            }
+            scrollToBottom();
+
+          } else if (type === "IDLE") {
+            // 思考结束，不新建message，直接在当前message追加
+            if (currentMessage.value) {
+              currentMessage.value.content += `\n\n[思考结束，生成回答中...]\n\n`;
+              currentMessage.value.isReasoning = false; // 标记推理结束
+            }
+            scrollToBottom();
+          } else if (type === "CONTENT") {
+            if (currentMessage.value) {
+              // 继续在当前message中追加正式回答内容
+              currentMessage.value.content += content;
+            } else {
+              // 极少情况，CONTENT先到了，保险措施
+              const newMessage = {
+                role: 'assistant',
+                content: content,
+                modelType: 'deepseek-r1',
+              };
+              messages.value.push(newMessage);
+              currentMessage.value = newMessage;
+            }
+            scrollToBottom();
+          } else if (type === "DONE") {
+            // 回答完成，清空 currentMessage
+            currentMessage.value = null;
+          }
         } else {
-          // 否则创建新消息，包含当前选择的模型类型
-          messages.value.push({
-            role: 'assistant',
-            content: content,
-            modelType: selectedModel.value
-          })
+          // 非推理型模型的处理逻辑（只有 CONTENT 和 DONE）
+          if (type === "CONTENT") {
+            if (!currentMessage.value) {
+              const newMessage = {
+                role: 'assistant',
+                content: content,
+                modelType: currentModelType,
+              };
+              messages.value.push(newMessage);
+              currentMessage.value = newMessage;
+            } else {
+              currentMessage.value.content += content;
+            }
+            scrollToBottom();
+          } else if (type === "DONE") {
+            currentMessage.value = null;
+          }
         }
-
-        scrollToBottom()
       } catch (error) {
-        console.error('Error handling WebSocket message:', error)
+        console.error('Error handling WebSocket message:', error);
       }
-    }
+    };
+
   } else {
     console.log('User is not authenticated, WebSocket connection skipped')
   }
@@ -384,6 +443,14 @@ onMounted(() => {
     settingsForm.value = JSON.parse(savedSettings)
   }
 })
+
+// 判断当前模型是否是推理模型
+function isReasoningModel(modelType) {
+  // 这里维护一个推理型模型的列表
+  const reasoningModels = ['deepseek-r1', '你的其他推理模型'];
+  return reasoningModels.includes(modelType);
+}
+
 
 onUnmounted(() => {
   console.log('Component unmounted, disconnecting WebSocket')

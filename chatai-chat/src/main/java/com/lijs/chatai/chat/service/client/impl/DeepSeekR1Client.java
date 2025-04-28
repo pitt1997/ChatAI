@@ -84,40 +84,49 @@ public class DeepSeekR1Client implements LLMClient {
         restTemplate.execute(config.getApiUrl(), HttpMethod.POST, requestCallback, response -> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()));
             String line;
-            boolean isReasoningPhase = false; // 标记当前是否处于思考阶段
+            boolean isReasoningPhase = false; // 默认不是思考阶段
+            boolean reasoningJustFinished = true; // 标记思考阶段是否已经结束
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("data: ")) {
                     String json = line.substring(6).trim();
                     if (!json.equals("[DONE]")) {
-                        // 解析 JSON 并提取内容
-                        Pair<String, String> parsed = parseChunk(json);
-                        String messageType = parsed.getKey();
-                        String messageContent = parsed.getValue();
+                        List<Pair<String, String>> parsedList = parseChunk(json);
+                        for (Pair<String, String> parsed : parsedList) {
+                            String messageType = parsed.getKey();
+                            String messageContent = parsed.getValue();
 
-                        // 根据类型处理消息
-                        if (session.isOpen()) {
-                            switch (messageType) {
-                                case "REASONING":
-                                    isReasoningPhase = true;
-                                    session.sendMessage(new TextMessage(
-                                            messageContent
-                                            //"{\"type\":\"REASONING\",\"data\":\"" + escapeJson(messageContent) + "\"}"
-                                    ));
-                                    break;
-                                case "IDLE":
-                                    isReasoningPhase = false;
-                                    session.sendMessage(new TextMessage(
-                                            "思考完毕\n"
-                                            //"{\"type\":\"REASONING_END\",\"data\":\"\"}"
-                                    ));
-                                    break;
-                                case "CONTENT":
-                                    session.sendMessage(new TextMessage(
-                                            messageContent
-                                    ));
-                                    break;
+                            if (session.isOpen()) {
+                                switch (messageType) {
+                                    case "REASONING":
+                                        isReasoningPhase = true;
+                                        session.sendMessage(new TextMessage(
+                                                "{\"type\":\"REASONING\",\"data\":\"" + escapeJson(messageContent) + "\"}"
+                                        ));
+                                        break;
+                                    case "IDLE":
+                                        isReasoningPhase = false;
+                                        if (reasoningJustFinished) {
+                                            session.sendMessage(new TextMessage(
+                                                    "{\"type\":\"IDLE\",\"data\":\"\"}"
+                                            ));
+                                            reasoningJustFinished = false;
+                                        }
+                                        break;
+                                    case "CONTENT":
+                                        if (!isReasoningPhase) {
+                                            // 只在思考结束后发送 content
+                                            session.sendMessage(new TextMessage(
+                                                    "{\"type\":\"CONTENT\",\"data\":\"" + escapeJson(messageContent) + "\"}"
+                                            ));
+                                        }
+                                        break;
+                                }
                             }
                         }
+                    } else  {
+                        session.sendMessage(new TextMessage(
+                                "{\"type\":\"DONE\",\"data\":\"\"}"
+                        ));
                     }
                 }
             }
@@ -189,9 +198,8 @@ public class DeepSeekR1Client implements LLMClient {
 
     private enum State {REASONING, CONTENT, IDLE}
 
-    private State currentState = State.IDLE;
-
-    public Pair<String, String> parseChunk(String json) {
+    public List<Pair<String, String>> parseChunk(String json) {
+        List<Pair<String, String>> result = new ArrayList<>();
         try {
             JsonNode delta = new ObjectMapper()
                     .readTree(json)
@@ -201,24 +209,28 @@ public class DeepSeekR1Client implements LLMClient {
             if (delta.has("reasoning_content")) {
                 JsonNode reasoningNode = delta.path("reasoning_content");
                 if (reasoningNode.isNull()) {
-                    currentState = State.CONTENT; // 切换到输出阶段
-                    return Pair.of(State.REASONING.name(), ""); // 发送思考结束信号
+                    result.add(Pair.of(State.IDLE.name(), "")); // 思考结束
                 } else {
-                    currentState = State.REASONING;
-                    return Pair.of(State.REASONING.name(), reasoningNode.asText());
+                    result.add(Pair.of(State.REASONING.name(), reasoningNode.asText()));
                 }
             }
 
-            // 2. 处理正式输出（仅在 CONTENT 状态处理）
-            if (currentState == State.CONTENT && delta.has("content")) {
-                return Pair.of(State.CONTENT.name(), delta.path("content").asText());
+            // 2. 处理正式输出
+            if (delta.has("content")) {
+                JsonNode contentNode = delta.path("content");
+                if (contentNode.isNull()) {
+                    // 为空则不进行输出
+                } else {
+                    result.add(Pair.of(State.CONTENT.name(), contentNode.asText()));
+                }
             }
 
-            return Pair.of(State.IDLE.name(), "");
         } catch (Exception e) {
-            return Pair.of(State.IDLE.name(), "[ERROR]");
+            result.add(Pair.of(State.IDLE.name(), "[ERROR]"));
         }
+        return result;
     }
+
 
     private String extractContent(String responseBody) {
         try {
@@ -253,4 +265,5 @@ public class DeepSeekR1Client implements LLMClient {
         body.put("messages", messages);
         return body;
     }
+
 }
