@@ -181,36 +181,31 @@ llm:
 
 |        工具        | 说明           | 官网                                                                                                           | 
 |:----------------:|--------------|--------------------------------------------------------------------------------------------------------------|
-|       IDEA       | java开发工具     | [https://www.jetbrains.com](https://www.jetbrains.com)                                                       |
+|  IntelliJ IDEA   | java开发工具     | [https://www.jetbrains.com](https://www.jetbrains.com)                                                       |
 |     Webstorm     | web开发工具      | [https://www.jetbrains.com/webstorm](https://www.jetbrains.com/webstorm)                                     |
 |      Chrome      | 浏览器          | [https://www.google.com/intl/zh-CN/chrome](https://www.google.com/intl/zh-CN/chrome)                         |
 |   ScreenToGif    | gif录屏        | [https://www.screentogif.com](https://www.screentogif.com)                                                   |
 |     SniPaste     | 截图           | [https://www.snipaste.com](https://www.snipaste.com)                                                         |
 |     PicPick      | 图片处理工具       | [https://picpick.app](https://picpick.app)                                                                   |
 |     MarkText     | markdown编辑器  | [https://github.com/marktext/marktext](https://github.com/marktext/marktext)                                 |
-|       curl       | http终端请求     | [https://curl.se](https://curl.se)                                                                           |
 |     Postman      | API接口调试      | [https://www.postman.com](https://www.postman.com)                                                           |
 |     draw.io      | 流程图、架构图绘制    | [https://www.diagrams.net/](https://www.diagrams.net/)                                                       |
 |      Axure       | 原型图设计工具      | [https://www.axure.com](https://www.axure.com)                                                     |
-|     navicat      | 数据库连接工具      | [https://www.navicat.com](https://www.navicat.com)                                                           |
+|     Navicat      | 数据库连接工具      | [https://www.navicat.com](https://www.navicat.com)                                                           |
 |     DBeaver      | 免费开源的数据库连接工具 | [https://dbeaver.io](https://dbeaver.io)                                                                     |
 |      iTerm2      | mac终端        | [https://iterm2.com](https://iterm2.com)                                                                     |
-| windows terminal | win终端        | [https://learn.microsoft.com/en-us/windows/terminal/install](https://learn.microsoft.com/en-us/windows/terminal/install) |
+| Windows terminal | win终端        | [https://learn.microsoft.com/en-us/windows/terminal/install](https://learn.microsoft.com/en-us/windows/terminal/install) |
 |   SwitchHosts    | host管理       | [https://github.com/oldj/SwitchHosts/releases](https://github.com/oldj/SwitchHosts/releases)                 |
 
 
 ### 开发环境
 
-|      工具       | 版本        | 下载                                                                                                                     |
-|:-------------:|:----------|------------------------------------------------------------------------------------------------------------------------|
-|      jdk      | 1.8+      | [https://www.oracle.com/java/technologies/downloads/#java8](https://www.oracle.com/java/technologies/downloads/#java8) |
-|     maven     | 3.4+      | [https://maven.apache.org/](https://maven.apache.org/)                                                                 |
-|     mysql     | 5.7+/8.0+ | [https://www.mysql.com/downloads/](https://www.mysql.com/downloads/)                                                   |
-|     redis     | 5.0+      | [https://redis.io/download/](https://redis.io/download/)                                                               |
-|     nginx     | 1.10+     | [https://nginx.org/en/download.html](https://nginx.org/en/download.html)                                               |
-|   rabbitmq    | 3.10.14+  | [https://www.rabbitmq.com/news.html](https://www.rabbitmq.com/news.html)                                               |
-|    ali-oss    | 3.15.1    | [https://help.aliyun.com/document_detail/31946.html](https://help.aliyun.com/document_detail/31946.html)               |
-|      git      | 2.34.1    | [http://github.com/](http://github.com/)                                                                               |
-|    docker     | 4.10.0+   | [https://docs.docker.com/desktop/](https://docs.docker.com/desktop/)                                                   |
-| let's encrypt | https证书   | [https://letsencrypt.org/](https://letsencrypt.org/)                                                                   |
-
+|   工具   | 版本      | 下载                                                                                                                     |
+|:------:|:--------|------------------------------------------------------------------------------------------------------------------------|
+|  JDK   | 1.8+    | [https://www.oracle.com/java/technologies/downloads/#java8](https://www.oracle.com/java/technologies/downloads/#java8) |
+| Maven  | 3.9+    | [https://maven.apache.org/](https://maven.apache.org/)                                                                 |
+| MySQL  | 8.0+    | [https://www.mysql.com/downloads/](https://www.mysql.com/downloads/)                                                   |
+| Redis  | 5.0+    | [https://redis.io/download/](https://redis.io/download/)                                                               |
+| Nginx  | 1.10+   | [https://nginx.org/en/download.html](https://nginx.org/en/download.html)                                               |
+|  Git   | 2.39.5  | [http://github.com/](http://github.com/)                                                                               |
+| Docker | 4.10.0+ | [https://docs.docker.com/desktop/](https://docs.docker.com/desktop/)                                                   |
