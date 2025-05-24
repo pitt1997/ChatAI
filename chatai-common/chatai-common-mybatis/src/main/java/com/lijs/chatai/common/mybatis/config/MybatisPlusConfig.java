@@ -9,13 +9,14 @@ import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+//import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+//import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+//import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.lijs.chatai.common.mybatis.handler.CustomTenantHandler;
+//import com.lijs.chatai.common.mybatis.handler.CustomTenantHandler;
 import com.lijs.chatai.common.mybatis.handler.EntityAutoFillHandler;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.annotation.PostConstruct;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.type.TypeHandler;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +37,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -125,10 +127,10 @@ public class MybatisPlusConfig {
         return dataSourceRouting;
     }
 
-    @Bean
-    public TenantLineInnerInterceptor tenantLineInnerInterceptor() {
-        return new TenantLineInnerInterceptor(new CustomTenantHandler());
-    }
+//    @Bean
+//    public TenantLineInnerInterceptor tenantLineInnerInterceptor() {
+//        return new TenantLineInnerInterceptor(new CustomTenantHandler());
+//    }
 
     private void checkPrimaryConnection(DataSource dataSource) {
         for (int attempt = 0; attempt < 3; attempt++) {
@@ -211,42 +213,76 @@ public class MybatisPlusConfig {
                                                               ObjectProvider<DatabaseIdProvider> databaseIdProvider,
                                                               ObjectProvider<TypeHandler[]> typeHandlersProvider) {
         MybatisSqlSessionFactoryBean sessionFactory = new MybatisSqlSessionFactoryBean();
-        // 配置mybatis-plus、mybatis插件生效
+
+        // 配置 mybatis-plus 和 mybatis 插件生效
         Interceptor[] interceptors = interceptorsProvider.getIfAvailable();
         sessionFactory.setPlugins(interceptors);
+
         // 配置数据源（支持数据源切换）
         sessionFactory.setDataSource(dynamicDataSource());
+
         // 配置扫描映射文件
         if (databaseIdProvider.getIfAvailable() != null) {
             sessionFactory.setDatabaseIdProvider(databaseIdProvider.getIfAvailable());
         }
+
+        // 配置 MyBatis-Plus 的别名包
         if (StringUtils.hasLength(this.mybatisPlusProperties.getTypeAliasesPackage())) {
             sessionFactory.setTypeAliasesPackage(this.mybatisPlusProperties.getTypeAliasesPackage());
         }
+
+        // 配置 MyBatis-Plus 的别名超类
         if (this.mybatisPlusProperties.getTypeAliasesSuperType() != null) {
             sessionFactory.setTypeAliasesSuperType(this.mybatisPlusProperties.getTypeAliasesSuperType());
         }
+
+        // 配置 MyBatis-Plus 的类型处理器包
         if (StringUtils.hasLength(this.mybatisPlusProperties.getTypeHandlersPackage())) {
             sessionFactory.setTypeHandlersPackage(this.mybatisPlusProperties.getTypeHandlersPackage());
         }
+
+        // 配置类型处理器
         if (!ObjectUtils.isEmpty(typeHandlersProvider.getIfAvailable())) {
             sessionFactory.setTypeHandlers(typeHandlersProvider.getIfAvailable());
         }
+
+        // 配置映射文件位置
         org.springframework.core.io.Resource[] mapperLocations = this.mybatisPlusProperties.resolveMapperLocations();
         if (!ObjectUtils.isEmpty(mapperLocations)) {
             sessionFactory.setMapperLocations(mapperLocations);
         }
-        MybatisConfiguration configuration = this.mybatisPlusProperties.getConfiguration();
-        if (configuration == null && !StringUtils.hasText(this.mybatisPlusProperties.getConfigLocation())) {
-            configuration = new MybatisConfiguration();
-        }
-        sessionFactory.setConfiguration(configuration);
 
-        // mybatis-plus全局配置
+        sessionFactory.setConfiguration(new MybatisConfiguration());
+
+//        // 处理 MybatisConfiguration 和 CoreConfiguration 的类型转换
+//        MybatisConfiguration mybatisConfiguration = new MybatisConfiguration();
+//
+//        // 这里填充一些 MybatisConfiguration 配置项（你可以根据需要手动设置核心配置项）
+//        MybatisPlusProperties.CoreConfiguration coreConfiguration = this.mybatisPlusProperties.getConfiguration();
+//        if (coreConfiguration != null) {
+//            // 设置 MybatisConfiguration 的相关属性
+//            if (coreConfiguration.getVariables() != null) {
+//                mybatisConfiguration.setVariables(coreConfiguration.getVariables());
+//            }
+//
+//            // 你可以继续从 CoreConfiguration 填充其他配置项，比如插件、类型处理器等
+//            // 假设你可以获取 typeAliases、typeHandlers 等字段并设置到 mybatisConfiguration
+//        }
+//
+//        // 如果没有配置项，则使用默认的 MybatisConfiguration
+//        if (mybatisConfiguration == null && !StringUtils.hasText(this.mybatisPlusProperties.getConfigLocation())) {
+//            mybatisConfiguration = new MybatisConfiguration();
+//        }
+//
+//        // 设置 Mybatis 的全局配置
+//        sessionFactory.setConfiguration(mybatisConfiguration);
+
+        // 设置 Mybatis-Plus 全局配置（例如分页插件等）
         setGlobalConfig(sessionFactory);
 
         return sessionFactory;
     }
+
 
     /**
      * 参考源码MybatisPlusAutoConfiguration#setGlobalConfig
@@ -278,19 +314,19 @@ public class MybatisPlusConfig {
         sessionFactory.setGlobalConfig(globalConfig);
     }
 
-    private void setConfiguration(MybatisSqlSessionFactoryBean sessionFactory) {
-        MybatisConfiguration configuration = this.mybatisPlusProperties.getConfiguration();
-        if (configuration == null && !StringUtils.hasText(this.mybatisPlusProperties.getConfigLocation())) {
-            configuration = new MybatisConfiguration();
-        }
-        sessionFactory.setConfiguration(configuration);
-    }
+//    private void setConfiguration(MybatisSqlSessionFactoryBean sessionFactory) {
+//        MybatisConfiguration configuration = this.mybatisPlusProperties.getConfiguration();
+//        if (configuration == null && !StringUtils.hasText(this.mybatisPlusProperties.getConfigLocation())) {
+//            configuration = new MybatisConfiguration();
+//        }
+//        sessionFactory.setConfiguration(configuration);
+//    }
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(mybatisTenantLineHandler()));
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(currentDbType()));
+        //interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(mybatisTenantLineHandler()));
+        //interceptor.addInnerInterceptor(new PaginationInnerInterceptor(currentDbType()));
         return interceptor;
     }
 
@@ -306,10 +342,10 @@ public class MybatisPlusConfig {
         return new DataSourceTransactionManager(dynamicDataSource());
     }
 
-    @Bean
-    public TenantLineHandler mybatisTenantLineHandler() {
-        return new CustomTenantHandler();
-    }
+//    @Bean
+//    public TenantLineHandler mybatisTenantLineHandler() {
+//        return new CustomTenantHandler();
+//    }
 
     @Bean
     public MetaObjectHandler mybatisMetaObjectHandler() {

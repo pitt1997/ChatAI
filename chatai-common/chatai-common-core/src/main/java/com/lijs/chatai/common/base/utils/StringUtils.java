@@ -1,8 +1,5 @@
 package com.lijs.chatai.common.base.utils;
 
-import sun.misc.BASE64Decoder;
-
-import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -460,21 +457,21 @@ public final class StringUtils {
         return template;
     }
 
-    /**
-     * 将 Base64 编码的字符串转换为字节数组
-     *
-     * @param base64Str Base64 编码的字符串
-     * @return 解码后的字节数组，若解码失败则返回空数组
-     */
-    public static byte[] toBytes(String base64Str) {
-        BASE64Decoder decoder = new BASE64Decoder();
-        byte[] decoderBytes = new byte[0];
-        try {
-            decoderBytes = decoder.decodeBuffer(base64Str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return decoderBytes;
-    }
+//    /**
+//     * 将 Base64 编码的字符串转换为字节数组
+//     *
+//     * @param base64Str Base64 编码的字符串
+//     * @return 解码后的字节数组，若解码失败则返回空数组
+//     */
+//    public static byte[] toBytes(String base64Str) {
+//        BASE64Decoder decoder = new BASE64Decoder();
+//        byte[] decoderBytes = new byte[0];
+//        try {
+//            decoderBytes = decoder.decodeBuffer(base64Str);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return decoderBytes;
+//    }
 
 }

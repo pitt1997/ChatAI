@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,22 +39,22 @@ public class FlywayServiceImpl implements FlywayService {
     @Autowired(required = false)
     private Flyway flyway;
 
-    @Resource
-    private DataSourceRouting dataSourceRouting;
+//    @Resource
+//    private DataSourceRouting dataSourceRouting;
 
     /**
      * 更新所有数据源
      */
     @Override
     public void migrate() {
-        Map<Object, DataSource> dataSourceMap = new HashMap<>(dataSourceRouting.getResolvedDataSources());
-        dataSourceMap.forEach((key, ds) -> {
-            try {
-                this.migrateDataSource(ds);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            }
-        });
+//        Map<Object, DataSource> dataSourceMap = new HashMap<>(dataSourceRouting.getResolvedDataSources());
+//        dataSourceMap.forEach((key, ds) -> {
+//            try {
+//                this.migrateDataSource(ds);
+//            } catch (Exception e) {
+//                logger.error(e.getMessage(), e);
+//            }
+//        });
     }
 
     @Override

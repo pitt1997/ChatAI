@@ -1,8 +1,8 @@
 package com.lijs.chatai.common.mybatis.config;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceInitializationMode;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ClassUtils;
@@ -25,6 +25,15 @@ public class DataSourceConfig {
     private HikariPoolConfig hikari = new HikariPoolConfig();
 
     private ClassLoader classLoader;
+
+    public DataSourceConfig() {
+        System.out.println(" DataSourceConfig 构造函数被调用");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("DataSourceConfig config is loaded!");
+    }
 
     /**
      * 数据源名称
@@ -69,7 +78,7 @@ public class DataSourceConfig {
     /**
      * 确定是否应根据可用的 DDL 和 DML 脚本执行 DataSource 初始化的模式。
      */
-    private DataSourceInitializationMode initializationMode = DataSourceInitializationMode.EMBEDDED;
+//    private DataSourceInitializationMode initializationMode = DataSourceInitializationMode.EMBEDDED;
 
     /**
      * 在 DDL 或 DML 脚本中使用
@@ -261,14 +270,6 @@ public class DataSourceConfig {
      */
     public void setJndiName(String jndiName) {
         this.jndiName = jndiName;
-    }
-
-    public DataSourceInitializationMode getInitializationMode() {
-        return this.initializationMode;
-    }
-
-    public void setInitializationMode(DataSourceInitializationMode initializationMode) {
-        this.initializationMode = initializationMode;
     }
 
     public String getPlatform() {

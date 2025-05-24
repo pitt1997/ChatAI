@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.lijs.chatai.common.web.config.i18n.BaseI18nWebConfig

@@ -202,7 +202,7 @@ llm:
 
 |   工具   | 版本      | 下载                                                                                                                     |
 |:------:|:--------|------------------------------------------------------------------------------------------------------------------------|
-|  JDK   | 1.8+    | [https://www.oracle.com/java/technologies/downloads/#java8](https://www.oracle.com/java/technologies/downloads/#java8) |
+|  JDK   | 21+     | [https://www.oracle.com/java/technologies/downloads/#java8](https://www.oracle.com/java/technologies/downloads/#java8) |
 | Maven  | 3.9+    | [https://maven.apache.org/](https://maven.apache.org/)                                                                 |
 | MySQL  | 8.0+    | [https://www.mysql.com/downloads/](https://www.mysql.com/downloads/)                                                   |
 | Redis  | 5.0+    | [https://redis.io/download/](https://redis.io/download/)                                                               |

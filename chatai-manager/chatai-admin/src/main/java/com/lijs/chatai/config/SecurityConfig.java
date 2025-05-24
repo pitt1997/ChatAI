@@ -20,18 +20,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 禁用basic认证
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/auth/login").permitAll() // 登录接口放行
-                .antMatchers("/user/getUserByName").permitAll() // 公开接口放行
-                .antMatchers("/user/search").permitAll() // 公开接口放行
-                // .antMatchers("/api/public/**").permitAll() // 或者公共API
-                .anyRequest().authenticated()
-                .and();
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/user/getUserByName").permitAll()
+                        .requestMatchers("/user/search").permitAll()
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }

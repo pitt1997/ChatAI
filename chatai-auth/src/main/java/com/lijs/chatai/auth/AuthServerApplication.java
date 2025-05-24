@@ -1,11 +1,14 @@
 package com.lijs.chatai.auth;
 
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.lijs.chatai.common.mybatis.config.MybatisPlusConfig;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author ljs
@@ -14,8 +17,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.lijs.chatai.core.api.feign") // 指定 Feign 接口所在包
+@ImportAutoConfiguration
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
+        MybatisPlusAutoConfiguration.class,
         MybatisPlusConfig.class
 })
 public class AuthServerApplication {

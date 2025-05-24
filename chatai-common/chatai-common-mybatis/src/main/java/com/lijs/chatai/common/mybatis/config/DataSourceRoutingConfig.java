@@ -7,6 +7,7 @@ import com.baomidou.dynamic.datasource.processor.DsHeaderProcessor;
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
+import jakarta.annotation.PostConstruct;
 import org.springframework.aop.Advisor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -21,6 +22,12 @@ import org.springframework.context.expression.BeanFactoryResolver;
 @Configuration
 @ConditionalOnBean(DataSourceRouting.class)
 public class DataSourceRoutingConfig {
+
+    @PostConstruct
+    public void init() {
+        System.out.println("3 config is loaded!");
+    }
+
 
     @Bean
     @ConditionalOnMissingBean

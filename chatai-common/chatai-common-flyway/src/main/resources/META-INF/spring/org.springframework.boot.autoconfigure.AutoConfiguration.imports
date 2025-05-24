@@ -1,0 +1,2 @@
+com.lijs.chatai.common.flyway.config.FlywayConfig
+com.lijs.chatai.common.flyway.service.impl.FlywayServiceImpl

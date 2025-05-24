@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @description
  */
 @Component
-@DependsOn({"redissonConfig", "caffeineCacheService"})
+//@DependsOn({"redissonConfig", "caffeineCacheService"})
 public class RedisKeyEventListener {
 
     private final Logger logger = LoggerFactory.getLogger(RedisKeyEventListener.class);

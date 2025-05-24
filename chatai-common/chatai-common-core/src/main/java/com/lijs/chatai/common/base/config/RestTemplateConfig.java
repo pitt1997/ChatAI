@@ -1,23 +1,25 @@
 package com.lijs.chatai.common.base.config;
 
-import com.lijs.chatai.common.base.config.httpclient.HttpClientFactory;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfig {
 
-    private final HttpClientFactory httpClientFactory = new HttpClientFactory();
 
     /**
-     * 支持超时配置的 RestTemplate
+     * 使用 Apache HttpClient 支持超时设置的 RestTemplate
      */
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate(new OkHttp3ClientHttpRequestFactory(
-                httpClientFactory.createHttpClient(5, 300)));
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .build();
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        factory.setConnectTimeout(5000);
+        return new RestTemplate(factory);
     }
-
 }

@@ -1,0 +1,2 @@
+com.lijs.chatai.common.base.config.JacksonConfig
+com.lijs.chatai.common.base.config.RestTemplateConfig

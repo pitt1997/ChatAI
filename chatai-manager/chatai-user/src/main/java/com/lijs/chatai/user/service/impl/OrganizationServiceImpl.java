@@ -17,7 +17,7 @@ import com.lijs.chatai.user.service.OrganizationService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author pitt1

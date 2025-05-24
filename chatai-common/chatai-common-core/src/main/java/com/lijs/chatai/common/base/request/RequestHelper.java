@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class RequestHelper {
      * 获取 request
      */
     public static HttpServletRequest getCurrentRequest() {
-        return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+        return (HttpServletRequest) Optional.ofNullable(RequestContextHolder.getRequestAttributes())
                 .map(attributes -> ((ServletRequestAttributes) attributes).getRequest())
                 .orElse(null);
     }

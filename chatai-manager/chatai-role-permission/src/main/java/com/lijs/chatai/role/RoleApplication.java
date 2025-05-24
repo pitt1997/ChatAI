@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.lijs")
+//@ComponentScan(basePackages = "com.lijs")
 // markerInterface作用：只有那些直接或间接继承了 BaseMapper 的接口才会被认为是合法的 Mapper 接口。（简化配置不需要@Mapper注解）
 @MapperScan(value= "com.lijs.chatai.role.dao", markerInterface = BaseMapper.class)
 public class RoleApplication {

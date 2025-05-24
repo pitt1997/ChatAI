@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @TableName t_access
  */
-@Data
+//@Data
 @TableName(value = "t_access")
 public class AccessDO extends BaseEntity implements Serializable {
 
@@ -29,4 +29,20 @@ public class AccessDO extends BaseEntity implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getUserGroupId() {
+        return userGroupId;
+    }
+
+    public void setUserGroupId(String userGroupId) {
+        this.userGroupId = userGroupId;
+    }
 }

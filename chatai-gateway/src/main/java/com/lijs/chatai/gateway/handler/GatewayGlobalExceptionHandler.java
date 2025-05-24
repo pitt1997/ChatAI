@@ -42,7 +42,7 @@ public class GatewayGlobalExceptionHandler implements ErrorWebExceptionHandler {
         // 请求头设置
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (ex instanceof ResponseStatusException) {
-            response.setStatusCode(((ResponseStatusException) ex).getStatus());
+            response.setStatusCode(((ResponseStatusException) ex).getStatusCode());
         }
 
         return response.writeWith(Mono.fromSupplier(() -> {

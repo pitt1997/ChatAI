@@ -12,6 +12,17 @@ server:
 spring:
   application:
     name: auth
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+  config:
+    import:
+      - nacos:application.yml
   security:
     index-path: /chat
   session:
@@ -24,15 +35,6 @@ spring:
     suffix: .ftl
     template-loader-path: classpath:/templates/
     request-context-attribute: request
-  cloud:
-    nacos:
-      username: nacos
-      password: nacos
-      discovery:
-        server-addr: 127.0.0.1:8848
-        enabled: true  # 确保服务发现启用
-      config:
-        server-addr: ${spring.cloud.nacos.discovery.server-addr}
   datasource:
     url: jdbc:h2:mem:testdb # 由于mybatis组件依赖但是又不需要真的数据源，所以配置一个假数据源
     driver-class-name: org.h2.Driver
@@ -47,11 +49,9 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 1 # 默认使用 0 库
-    password:
-  config:
-    import:
-      - optional:nacos:application-@profiles.active@.yml
-      - optional:nacos:${spring.application.name}-@profiles.active@.yml
+    password: 123456
 
-
+#logging:
+#  level:
+#    com.alibaba.nacos: DEBUG
 

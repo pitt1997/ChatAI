@@ -1,0 +1,4 @@
+com.lijs.chatai.common.mybatis.config.DataSourceConfig
+com.lijs.chatai.common.mybatis.config.MybatisPlusConfig
+com.lijs.chatai.common.mybatis.config.DataPermissionConfig
+com.lijs.chatai.common.mybatis.config.DataSourceRoutingConfig

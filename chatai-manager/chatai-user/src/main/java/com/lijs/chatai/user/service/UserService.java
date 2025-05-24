@@ -9,7 +9,7 @@ import com.lijs.chatai.core.model.vo.UserVO;
 import com.lijs.chatai.user.model.request.UserAddRequest;
 import com.lijs.chatai.user.model.request.UserUpdateRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

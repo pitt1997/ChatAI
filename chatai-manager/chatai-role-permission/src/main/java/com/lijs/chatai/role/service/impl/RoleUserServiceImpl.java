@@ -6,7 +6,7 @@ import com.lijs.chatai.core.model.entity.permission.RoleUserDO;
 import com.lijs.chatai.role.dao.RoleUserDAO;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

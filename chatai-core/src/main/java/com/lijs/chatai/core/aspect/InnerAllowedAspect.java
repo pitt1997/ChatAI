@@ -12,7 +12,7 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author ljs
