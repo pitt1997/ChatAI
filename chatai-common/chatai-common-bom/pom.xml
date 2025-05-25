@@ -25,7 +25,7 @@
         <maven.plugins.version>3.0.0</maven.plugins.version>
 
         <!-- spring&mybatis -->
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>3.4.1</spring-boot.version>
         <spring-boot.jasypt.version>3.0.5</spring-boot.jasypt.version>
         <spring-boot-admin.version>3.4.1</spring-boot-admin.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
@@ -37,7 +37,7 @@
         <!-- <mybatis-plus.version>3.4.3.2</mybatis-plus.version>-->
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
 
-        <nacos.version>2.0.0</nacos.version>
+        <nacos.version>2.3.0</nacos.version>
         <feign.version>11.0</feign.version>
         <feign-form.version>3.8.0</feign-form.version>
         <dubbo.version>2.7.8</dubbo.version>
@@ -45,7 +45,8 @@
         <nacos-client.version>2.3.0</nacos-client.version>
 
         <okhttp.version>4.12.0</okhttp.version>
-        <httpclient5.version>5.3</httpclient5.version>
+        <httpclient5.version>5.4.3</httpclient5.version>
+        <httpcore5.version>5.3.1</httpcore5.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <jakarta.api.version>2.1.1</jakarta.api.version>
         <antlr.version>2.7.7</antlr.version>
@@ -242,16 +243,6 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5</artifactId>
-                <version>${httpclient5.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.client5</groupId>
-                <artifactId>httpclient5</artifactId>
-                <version>${httpclient5.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>

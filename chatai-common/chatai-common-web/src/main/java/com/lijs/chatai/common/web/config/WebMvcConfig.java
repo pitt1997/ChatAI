@@ -6,11 +6,13 @@ import com.lijs.chatai.common.web.request.RequestBodyAdviceHandler;
 import com.lijs.chatai.common.mybatis.config.DataSourceRouting;
 import com.lijs.chatai.common.web.intercpter.LicenseInterceptor;
 import com.lijs.chatai.common.web.intercpter.SecurityInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -30,7 +32,10 @@ import jakarta.annotation.Resource;
 @Order(1)
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Resource
+    // 注意这里需要通过类型来引入，因为有地方通过方法名称的方式注入该bean但是不是这个名字
+    // @Resource
+    @Lazy
+    @Autowired
     private DataSourceRouting dataSourceRouting;
 
     @Bean

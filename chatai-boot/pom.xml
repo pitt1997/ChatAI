@@ -15,7 +15,7 @@
     <description>单机版启动</description>
 
     <dependencies>
-        <!-- 认证模块 -->
+        <!-- chat模块 -->
         <dependency>
             <groupId>com.lijs.chatai</groupId>
             <artifactId>chatai-chat</artifactId>
@@ -43,31 +43,10 @@
             <artifactId>chatai-resource</artifactId>
             <version>${chatai.version}</version>
         </dependency>
-        <!-- 注册中心客户端 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <!-- LB 扩展 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-        <!-- 配置中心客户端 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-        <!-- 认证中心模块 -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.lijs.chatai</groupId>-->
-        <!--            <artifactId>chatai-auth</artifactId>-->
-        <!--            <version>${chatai.version}</version>-->
-        <!--        </dependency>-->
     </dependencies>
 
     <build>

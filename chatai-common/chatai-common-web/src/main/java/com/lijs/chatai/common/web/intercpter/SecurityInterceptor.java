@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,9 +49,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    private DataSourceRouting dataSourceRouting;
+    private final DataSourceRouting dataSourceRouting;
 
-    public SecurityInterceptor(DataSourceRouting dataSourceRouting, String... anonUrls) {
+    public SecurityInterceptor(@Lazy DataSourceRouting dataSourceRouting, String... anonUrls) {
         // 数据源
         this.dataSourceRouting = dataSourceRouting;
         if (anonUrls != null) {

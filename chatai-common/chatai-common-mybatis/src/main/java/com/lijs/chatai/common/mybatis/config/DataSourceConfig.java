@@ -1,6 +1,5 @@
 package com.lijs.chatai.common.mybatis.config;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -25,15 +24,6 @@ public class DataSourceConfig {
     private HikariPoolConfig hikari = new HikariPoolConfig();
 
     private ClassLoader classLoader;
-
-    public DataSourceConfig() {
-        System.out.println(" DataSourceConfig 构造函数被调用");
-    }
-
-    @PostConstruct
-    public void init() {
-        System.out.println("DataSourceConfig config is loaded!");
-    }
 
     /**
      * 数据源名称

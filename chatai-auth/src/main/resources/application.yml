@@ -19,7 +19,9 @@ spring:
 #      password: nacos
       discovery:
         server-addr: 127.0.0.1:8848
+        enabled: true
       config:
+        enabled: true # false：表示单机版 true：微服务（默认开启）
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
   config:
     import:

@@ -7,6 +7,7 @@ import com.lijs.chatai.core.model.request.UserLoginRequest;
 import com.lijs.chatai.core.model.vo.UserVO;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import java.util.Collections;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
+    @Lazy // 注意单机版加载顺序 可能遇到加载不到到情况
     private UserApiClient userApiClient;
 
     @Override

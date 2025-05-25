@@ -111,9 +111,11 @@ public class MybatisPlusConfig {
 
     /**
      * 多数据源的配置
+     * 注意这里需要通过类型来引入，因为有地方通过方法名称的方式注入该bean但是不是这个名字
      */
     @Lazy
-    @Bean("dynamicDataSource")
+    //@Bean("dynamicDataSource")
+    @Bean
     public DataSourceRouting dynamicDataSource() {
         if (dataSourceRouting == null) {
             logger.info("dynamicDataSource init...");

@@ -13,6 +13,7 @@ import com.lijs.chatai.user.model.request.OrgAddRequest;
 import com.lijs.chatai.user.model.request.OrgUpdateRequest;
 import com.lijs.chatai.user.service.OrganizationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -30,6 +31,7 @@ import java.util.List;
 @Slf4j
 public class OrgController extends BaseController {
 
+    @Lazy
     @Resource
     private OrganizationService organizationService;
 

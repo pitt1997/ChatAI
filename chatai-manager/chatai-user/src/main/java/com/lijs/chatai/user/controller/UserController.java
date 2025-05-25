@@ -23,6 +23,7 @@ import com.lijs.chatai.user.model.request.UserUpdateRequest;
 import com.lijs.chatai.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserController extends BaseController implements UserApiClient {
 
+    @Lazy
     @Resource
     private UserService userService;
 

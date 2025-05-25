@@ -39,7 +39,7 @@ public class FlywayServiceImpl implements FlywayService {
     @Autowired(required = false)
     private Flyway flyway;
 
-//    @Resource
+//    @Autowired
 //    private DataSourceRouting dataSourceRouting;
 
     /**
