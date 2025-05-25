@@ -1,18 +1,47 @@
-# 前言
+# ChatAI
 
 ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。通过统一认证登录，实现大模型服务统一代理，让用户能够轻松接入像 ChatGPT、Qwen、DeepSeek 这样的热门大模型，同时还支持这些模型本地部署集成，满足不同的应用场景和需求。
 
-
-# 系统说明
+## 项目介绍
 
 - 基于 Spring Cloud 、Spring Boot、MyBatis-Plus、MySQL、Redis、Docker、Kafka 等技术栈实现的大模型统一集成平台；
 - 采用主流的互联网架构，支持微服务架构和单体架构；
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
 - OAuth2 的 RBAC 企业快速开发平台...（持续开发中...）
+- 接入 AI 大模型（如 DeepSeek、Qwen、ChatGPT 等）并且支持 AI 大模型本地部署
+- AI 开发框架（Spring AI + LangChain4j）、- Spring AI 核心特性：如自定义拦截器、上下文持久化、结构化输出
+- Prompt 工程和优化技巧、多模态特性
+- RAG 知识库和向量数据库（持续开发中...）
+- MCP 模型上下文协议和服务开发（持续开发中...）
+- AI 智能体 Manus 原理和自主开发（持续开发中...）
+- AI 服务化和 Serverless 部署（持续开发中...）
 
+## 技术栈
 
+项目以 Spring AI 开发框架实战为核心，涉及到多种主流 AI 客户端和工具库的运用。
 
-# 项目介绍
+- ⭐️ Java 21 + Spring Boot 3 框架
+- ⭐️ 采用主流的互联网架构，支持微服务架构和单体架构
+- ⭐️ 统一认证登录，支持多种安全授权模式
+- ⭐️ 统一配置管理，支持配置管理和热加载
+- ⭐️ Spring AI + LangChain4j
+- ⭐️ RAG 知识库
+- ⭐️ PGVector 向量数据库
+- ⭐ Tool Calling 工具调用
+- ⭐️ MCP 模型上下文协议
+- ⭐️ ReAct Agent 智能体构建
+- ⭐️ Serverless 计算服务
+- ⭐️ AI 大模型开发平台百炼
+- ⭐️ Cursor AI 代码生成 + MCP
+- ⭐️ Ollama 大模型部署
+- ⭐️ Kryo 高性能序列化
+- ⭐️ Jsoup 网页抓取
+- ⭐️ iText PDF 生成
+- ⭐️ Knife4j 接口文档
+
+RAG 核心特性：
+
+![RAG](/docs/imgs/rag.png)
 
 ## 项目演示
 
@@ -54,6 +83,7 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 ```
 backend
 ├── chatai-auth -- 认证授权模块
+├── chatai-agent -- Spring AI 智能体模块
 ├── chatai-boot -- 单机部署启动模块
 ├── chatai-common -- 系统公共模块
 │    ├── chatai-common-bom -- 管理项目中的依赖版本，确保各个模块的依赖一致性

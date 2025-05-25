@@ -34,7 +34,12 @@
         <spring-cloud-gateway.version>3.0.1</spring-cloud-gateway.version>
         <spring-cloud-bootstrap.version>3.0.1</spring-cloud-bootstrap.version>
         <spring-cloud-loadbalancer.version>3.0.1</spring-cloud-loadbalancer.version>
-        <!-- <mybatis-plus.version>3.4.3.2</mybatis-plus.version>-->
+        <langchain4j-ai.version>1.0.0-beta2</langchain4j-ai.version>
+        <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <spring-ai-open-ai.version>1.0.0-M6</spring-ai-open-ai.version>
+        <spring-ai-deepseek-ai.version>1.0.0</spring-ai-deepseek-ai.version>
+        <spring-ai-alibaba.version>1.0.0-M6.1</spring-ai-alibaba.version>
+        <spring-ai-alibaba-dashscope.version>2.19.1</spring-ai-alibaba-dashscope.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
 
         <nacos.version>2.3.0</nacos.version>
@@ -82,6 +87,8 @@
         <spring.checkstyle.plugin>0.0.43</spring.checkstyle.plugin>
 
         <lombok.version>1.18.36</lombok.version>
+
+        <knife4j.version>4.4.0</knife4j.version>
 
         <!-- Test -->
         <junit.version>4.12</junit.version>
@@ -196,6 +203,51 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid</artifactId>
                 <version>${druid.version}</version>
+            </dependency>
+            <!-- 阿里云百练、灵积大模型服务 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dashscope-sdk-java</artifactId>
+                <version>${spring-ai-alibaba-dashscope.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- Spring AI Alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-starter</artifactId>
+                <version>${spring-ai-alibaba.version}</version>
+            </dependency>
+            <!-- https://java2ai.com/docs/1.0.0-M6.1/models/ollama -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
+                <version>${spring-ai.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+                <version>${spring-ai-open-ai.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-deepseek</artifactId>
+                <version>${spring-ai-deepseek-ai.version}</version>
+            </dependency>
+            <!-- LangChain4J DashScope -->
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-community-dashscope</artifactId>
+                <version>${langchain4j-ai.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -454,6 +506,11 @@
             </dependency>
             <dependency>
                 <groupId>com.lijs.chatai</groupId>
+                <artifactId>chatai-agent</artifactId>
+                <version>${chatai.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lijs.chatai</groupId>
                 <artifactId>chatai-auth</artifactId>
                 <version>${chatai.version}</version>
             </dependency>
@@ -644,5 +701,17 @@
 <!--            </plugin>-->
         </plugins>
     </build>
+
+    <!-- 需要引入仓库配置，才能下载到最新的 Spring AI 相关的依赖 -->
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

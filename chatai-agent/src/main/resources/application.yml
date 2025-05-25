@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: chatai-agent
+  profiles:
+    active: dev
+  ai:
+    openai:
+      api-key: sk-xxx
+      base-url: https://api.deepseek.com
+      chat:
+#        enabled: true
+        options:
+            model: deepseek-reasoner
+  cloud:
+    nacos: # 单机版本关闭nacos 服务发现和配置管理的能力
+      config:
+        enabled: false # false：表示单机版 true：微服务（默认开启）
+      discovery:
+        enabled: false
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+# springdoc-openapi config
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.lijs.agent.controller
+# knife4j config
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
