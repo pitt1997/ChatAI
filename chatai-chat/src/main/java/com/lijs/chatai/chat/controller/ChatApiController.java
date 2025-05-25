@@ -6,6 +6,7 @@ import com.lijs.chatai.chat.service.ChatService;
 import com.lijs.chatai.common.base.session.SessionUser;
 import com.lijs.chatai.common.base.token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class ChatApiController {
     private final DeepSeekR1Client deepSeekR1Client;
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    public ChatApiController(DeepSeekR1Client deepSeekR1Client) {
+    public ChatApiController(@Qualifier("deepSeekR1Client") DeepSeekR1Client deepSeekR1Client) {
         this.deepSeekR1Client = deepSeekR1Client;
     }
 

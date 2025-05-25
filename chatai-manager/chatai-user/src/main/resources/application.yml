@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/chatai
     username: root
-    password: 123456
+    password: 12345678
   # session 失效时间
   session:
     timeout: 86400
@@ -27,7 +27,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 1 # 默认使用 0 库
-    password: 123456
+    password:
 server:
     port: 8080
     servlet:
@@ -51,8 +51,8 @@ platform:
     anons:
       - /auth/login
 
-logging:
-  level:
-    com.baomidou.mybatisplus: DEBUG
-    org.mybatis.spring.mapper.MapperScannerConfigurer: DEBUG
+#logging:
+#  level:
+#    com.baomidou.mybatisplus: DEBUG
+#    org.mybatis.spring.mapper.MapperScannerConfigurer: DEBUG
 

@@ -14,8 +14,9 @@ spring:
     name: auth
   cloud:
     nacos:
-      username: nacos
-      password: nacos
+      # 没有密码认证则注释掉下面两行
+#      username: nacos
+#      password: nacos
       discovery:
         server-addr: 127.0.0.1:8848
       config:
@@ -49,7 +50,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 1 # 默认使用 0 库
-    password: 123456
+    password:
 
 #logging:
 #  level:
