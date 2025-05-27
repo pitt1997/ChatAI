@@ -9,7 +9,7 @@ ChatAI 是一个提供多个大模型集成、可灵活切换的高效平台。�
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
 - OAuth2 的 RBAC 企业快速开发平台...（持续开发中...）
 - 接入 AI 大模型（如 DeepSeek、Qwen、ChatGPT 等）并且支持 AI 大模型本地部署
-- AI 开发框架（Spring AI + LangChain4j）、- Spring AI 核心特性：如自定义拦截器、上下文持久化、结构化输出
+- AI 开发框架（Spring AI + LangChain4j）、Spring AI 核心特性：如自定义拦截器、上下文持久化、结构化输出
 - Prompt 工程和优化技巧、多模态特性
 - RAG 知识库和向量数据库（持续开发中...）
 - MCP 模型上下文协议和服务开发（持续开发中...）
