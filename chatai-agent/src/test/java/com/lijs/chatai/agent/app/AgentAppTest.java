@@ -36,4 +36,13 @@ class AgentAppTest {
         AgentApp.WeatherReport weatherReport = agentApp.doChatWithReport(message, chatId);
         Assertions.assertNotNull(weatherReport);
     }
+
+
+    @Test
+    void doChatWithRag() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "我正在谈恋爱，但是关系进展的还不太亲密，怎么办？";
+        String answer = agentApp.doChatWithRag(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
 }
